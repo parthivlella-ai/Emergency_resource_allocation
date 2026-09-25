@@ -955,8 +955,78 @@
             background: rgba(10, 15, 29, 0.75);
             border-radius: var(--radius-md);
             border: 1px solid var(--border-color);
-            margin-bottom: 26px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
+        }
+
+        /* Zone Selector Tabs */
+        .zone-selector-strip {
+            background: rgba(10, 15, 29, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        .zone-nav-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .zone-tab-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 9px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .zone-tab-pill:hover {
+            background: rgba(59, 130, 246, 0.18);
+            border-color: rgba(59, 130, 246, 0.45);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .zone-tab-pill.active {
+            background: linear-gradient(135deg, #2563eb, #0284c7);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 0 16px rgba(37, 99, 235, 0.45);
+        }
+
+        .zone-controls-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .zone-demographic-inputs {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .demo-input-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
         }
 
         .presets-label {
@@ -1809,11 +1879,69 @@
                 <!-- Quick Incident Presets Bar -->
                 <div class="presets-row">
                     <span class="presets-label">⚡ Incident Presets:</span>
-                    <button type="button" class="preset-chip" onclick="triggerFastDemo('cyclone_surge')">🚨 Extreme Cyclone / Coastal Surge (Demo)</button>
-                    <button type="button" class="preset-chip" onclick="triggerFastDemo('urban_collapse')">⚠️ Metro Drainage Collapse</button>
-                    <button type="button" class="preset-chip" onclick="triggerFastDemo('dam_spillway')">🌊 Mountain Dam Spillway Breach</button>
-                    <button type="button" class="preset-chip" onclick="applyLocalPreset('moderate')">⚖️ Moderate Seasonal Inflow</button>
-                    <button type="button" class="preset-chip" onclick="applyLocalPreset('reset')">🔄 Reset Parameters</button>
+                    <button type="button" class="preset-chip" onclick="triggerFastDemo('cyclone_surge')">🚨 Zone A Critical (Coastal Surge)</button>
+                    <button type="button" class="preset-chip" onclick="triggerFastDemo('urban_collapse')">⚠️ Zone B Critical (Metro Collapse)</button>
+                    <button type="button" class="preset-chip" onclick="triggerFastDemo('dam_spillway')">🌊 Zone C Critical (Dam Spillway Breach)</button>
+                    <button type="button" class="preset-chip" onclick="triggerFastDemo('lowland_flood')">🌾 Zone D Critical (Agricultural Flood)</button>
+                    <button type="button" class="preset-chip" onclick="triggerFastDemo('seasonal_baseline')">⚖️ Routine Baseline (All Standby)</button>
+                    <button type="button" class="preset-chip" onclick="applyLocalPreset('reset')">🔄 Reset Zone Sliders</button>
+                </div>
+
+                <!-- Interactive Zone Selector Strip: Allows selecting and tuning Zone A, B, C, D, or E -->
+                <div class="zone-selector-strip">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <strong style="font-size: 0.95rem; color: #ffffff;">🎯 Select Zone to Configure & Evaluate:</strong>
+                            <span style="font-size: 0.8rem; color: var(--text-secondary); margin-left: 8px;">(Any zone can become Critical Rank 1 based on its telemetry)</span>
+                        </div>
+                        <div style="font-size: 0.82rem; color: #93c5fd; background: rgba(59, 130, 246, 0.15); padding: 4px 12px; border-radius: 9999px; border: 1px solid rgba(59, 130, 246, 0.3);">
+                            Active Target: <strong id="current-zone-badge">Zone A</strong>
+                        </div>
+                    </div>
+
+                    <!-- Hidden input for standard form submission -->
+                    <input type="hidden" name="selected_zone" id="selected_zone_input" value="zone_a">
+
+                    <div class="zone-nav-tabs">
+                        <button type="button" class="zone-tab-pill active" id="tab-zone_a" onclick="selectZoneToEdit('zone_a')">
+                            <span>📍 Zone A</span>
+                        </button>
+                        <button type="button" class="zone-tab-pill" id="tab-zone_b" onclick="selectZoneToEdit('zone_b')">
+                            <span>📍 Zone B</span>
+                        </button>
+                        <button type="button" class="zone-tab-pill" id="tab-zone_c" onclick="selectZoneToEdit('zone_c')">
+                            <span>📍 Zone C</span>
+                        </button>
+                        <button type="button" class="zone-tab-pill" id="tab-zone_d" onclick="selectZoneToEdit('zone_d')">
+                            <span>📍 Zone D</span>
+                        </button>
+                        <button type="button" class="zone-tab-pill" id="tab-zone_e" onclick="selectZoneToEdit('zone_e')">
+                            <span>📍 Zone E</span>
+                        </button>
+                    </div>
+
+                    <!-- Selected Zone Demographics and Multipliers -->
+                    <div class="zone-controls-row">
+                        <div class="zone-demographic-inputs">
+                            <div class="demo-input-item">
+                                <label for="zone_pop_input">👥 Population:</label>
+                                <input type="number" id="zone_pop_input" name="zone_population" min="1000" step="5000" class="mini-num-input" style="width: 100px;" value="{{ zones_config[0].population if zones_config else 180000 }}" oninput="syncZoneDemographic('population', this.value)">
+                            </div>
+                            <div class="demo-input-item">
+                                <label for="zone_vuln_input">🛡️ Vulnerability:</label>
+                                <input type="range" id="zone_vuln_input" name="zone_vulnerability" min="0.05" max="1.0" step="0.05" class="range-slider" style="width: 100px;" value="{{ zones_config[0].vulnerability if zones_config else 0.85 }}" oninput="syncZoneDemographic('vulnerability', this.value)">
+                                <span id="badge-zone-vuln" class="param-pill">{{ zones_config[0].vulnerability if zones_config else 0.85 }}</span>
+                            </div>
+                            <div class="demo-input-item">
+                                <label for="zone_urg_input">⏱️ Urgency:</label>
+                                <input type="range" id="zone_urg_input" name="zone_urgency" min="0.05" max="1.0" step="0.05" class="range-slider" style="width: 100px;" value="{{ zones_config[0].urgency if zones_config else 0.88 }}" oninput="syncZoneDemographic('urgency', this.value)">
+                                <span id="badge-zone-urg" class="param-pill">{{ zones_config[0].urgency if zones_config else 0.88 }}</span>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">
+                            💡 Adjust parameters below for the selected zone, then click <strong>Run Multi-Zone Assessment & Allocate</strong>.
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Logically Grouped Input Categories per Phase 12 -->
@@ -1984,15 +2112,96 @@
         <span id="toast-message">Scenario evaluated successfully.</span>
     </div>
 
-    <!-- Client Script for Interactive Synchronization & Instant Demo -->
+    <!-- Client Script for Interactive Multi-Zone Synchronization & Instant Demo -->
     <script>
         const FEATURE_KEYS = {{ base_features | tojson }};
+        const INITIAL_ZONES = {{ zones_config | tojson }};
+
+        // Client-side multi-zone state so each zone (A, B, C, D, E) can be individually customized
+        window.zonesState = {};
+        if (INITIAL_ZONES && Array.isArray(INITIAL_ZONES)) {
+            INITIAL_ZONES.forEach(z => {
+                window.zonesState[z.id] = JSON.parse(JSON.stringify(z));
+            });
+        }
+        window.currentEditingZone = 'zone_a';
+
+        function selectZoneToEdit(zoneId) {
+            if (!window.zonesState || !window.zonesState[zoneId]) return;
+            window.currentEditingZone = zoneId;
+
+            // 1. Update Tab Pills
+            ['zone_a', 'zone_b', 'zone_c', 'zone_d', 'zone_e'].forEach(id => {
+                const tab = document.getElementById('tab-' + id);
+                if (tab) {
+                    if (id === zoneId) tab.classList.add('active');
+                    else tab.classList.remove('active');
+                }
+            });
+
+            // 2. Update hidden form input & badge
+            const hiddenInput = document.getElementById('selected_zone_input');
+            if (hiddenInput) hiddenInput.value = zoneId;
+
+            const badge = document.getElementById('current-zone-badge');
+            const z = window.zonesState[zoneId];
+            if (badge) badge.innerText = z.name || z.short_name || zoneId.toUpperCase();
+
+            // 3. Update demographic inputs
+            const popInput = document.getElementById('zone_pop_input');
+            if (popInput && z.population !== undefined) popInput.value = z.population;
+
+            const vulnInput = document.getElementById('zone_vuln_input');
+            const vulnBadge = document.getElementById('badge-zone-vuln');
+            if (vulnInput && z.vulnerability !== undefined) vulnInput.value = z.vulnerability;
+            if (vulnBadge && z.vulnerability !== undefined) vulnBadge.innerText = Number(z.vulnerability).toFixed(2);
+
+            const urgInput = document.getElementById('zone_urg_input');
+            const urgBadge = document.getElementById('badge-zone-urg');
+            if (urgInput && z.urgency !== undefined) urgInput.value = z.urgency;
+            if (urgBadge && z.urgency !== undefined) urgBadge.innerText = Number(z.urgency).toFixed(2);
+
+            // 4. Update the 20 environmental feature sliders
+            if (z.feats) {
+                FEATURE_KEYS.forEach(k => {
+                    const val = z.feats[k] !== undefined ? z.feats[k] : 5;
+                    const num = document.getElementById(k);
+                    const range = document.getElementById('range-' + k);
+                    const pill = document.getElementById('badge-' + k);
+                    if (num) num.value = val;
+                    if (range) range.value = val;
+                    if (pill) pill.innerText = val;
+                });
+            }
+        }
+
+        function syncZoneDemographic(field, val) {
+            const zId = window.currentEditingZone;
+            if (!window.zonesState || !window.zonesState[zId]) return;
+
+            const numVal = parseFloat(val) || 0;
+            window.zonesState[zId][field] = numVal;
+
+            if (field === 'vulnerability') {
+                const b = document.getElementById('badge-zone-vuln');
+                if (b) b.innerText = numVal.toFixed(2);
+            } else if (field === 'urgency') {
+                const b = document.getElementById('badge-zone-urg');
+                if (b) b.innerText = numVal.toFixed(2);
+            }
+        }
 
         function syncSlider(key, val) {
+            val = parseFloat(val) || 1;
             const num = document.getElementById(key);
             const badge = document.getElementById('badge-' + key);
             if (num) num.value = val;
             if (badge) badge.innerText = val;
+
+            const zId = window.currentEditingZone;
+            if (window.zonesState && window.zonesState[zId] && window.zonesState[zId].feats) {
+                window.zonesState[zId].feats[key] = val;
+            }
         }
 
         function syncNumber(key, val) {
@@ -2001,6 +2210,11 @@
             const badge = document.getElementById('badge-' + key);
             if (range) range.value = val;
             if (badge) badge.innerText = val;
+
+            const zId = window.currentEditingZone;
+            if (window.zonesState && window.zonesState[zId] && window.zonesState[zId].feats) {
+                window.zonesState[zId].feats[key] = val;
+            }
         }
 
         function showToast(message, icon = '⚡') {
@@ -2017,9 +2231,27 @@
             try {
                 const response = await fetch('/api/demo_scenario?type=' + encodeURIComponent(scenarioType));
                 const data = await response.json();
-                if (data.success) {
+                if (data.success && data.results) {
+                    // Sync client-side zonesState with new scenario features
+                    if (data.results.zones && Array.isArray(data.results.zones)) {
+                        data.results.zones.forEach(z => {
+                            if (window.zonesState[z.id]) {
+                                window.zonesState[z.id].feats = z.feats || window.zonesState[z.id].feats;
+                                window.zonesState[z.id].population = z.population;
+                                window.zonesState[z.id].vulnerability = z.vulnerability;
+                                window.zonesState[z.id].urgency = z.urgency;
+                            }
+                        });
+                        // Automatically select the Critical Rank 1 zone tab
+                        const rank1 = data.results.zones.find(z => z.priority_rank === 1);
+                        if (rank1) {
+                            selectZoneToEdit(rank1.id);
+                        }
+                    }
+
                     updateDashboardWithResults(data.results);
-                    showToast('Emergency scenario evaluated. Decision ready!', '🚨');
+                    const rank1Name = data.results.decision_card ? data.results.decision_card.primary_zone : 'Target Sector';
+                    showToast(`Scenario active: ${rank1Name} evaluated as Critical Rank #1!`, '🚨');
                     // Smoothly scroll to the primary Decision Card
                     const decEl = document.getElementById('decision-action');
                     if (decEl) {
@@ -2223,14 +2455,20 @@
         function applyLocalPreset(key) {
             const p = LOCAL_PRESETS[key];
             if (!p) return;
+            const zId = window.currentEditingZone;
             for (const [k, v] of Object.entries(p)) {
                 syncSlider(k, v);
             }
-            showToast('Parameters loaded: ' + key, '📋');
+            showToast(`Loaded ${key} preset for ${window.zonesState[zId] ? window.zonesState[zId].name : zId}`, '📋');
         }
 
         function focusZone(zoneId) {
-            showToast('Zone focus: ' + zoneId, '📍');
+            selectZoneToEdit(zoneId);
+            const assessEl = document.getElementById('operational-assessment');
+            if (assessEl) {
+                assessEl.scrollIntoView({ behavior: 'smooth' });
+            }
+            showToast('Editing inputs for ' + (window.zonesState[zoneId] ? window.zonesState[zoneId].name : zoneId), '📍');
         }
 
         // AJAX interception of the assessment form to provide instant silky-smooth results
@@ -2240,21 +2478,54 @@
             btn.disabled = true;
             btn.innerHTML = '<span>⏳ Evaluating Zones & Reallocating...</span>';
 
-            const formData = new FormData(this);
+            const form = this;
+            const resourcesData = {
+                total_boats: parseInt(form.total_boats.value) || 0,
+                total_rescue_teams: parseInt(form.total_rescue_teams.value) || 0,
+                total_ambulances: parseInt(form.total_ambulances.value) || 0,
+                total_medical: parseInt(form.total_medical.value) || 0,
+                total_food: parseInt(form.total_food.value) || 0,
+                total_water: parseInt(form.total_water.value) || 0,
+                total_shelters: parseInt(form.total_shelters.value) || 0
+            };
+
+            const payload = {
+                zones: Object.values(window.zonesState),
+                resources: resourcesData
+            };
+
             try {
                 const response = await fetch('/predict_and_allocate', {
                     method: 'POST',
-                    body: formData,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(payload)
                 });
                 const data = await response.json();
-                if (data.success) {
+                if (data.success && data.results) {
+                    // Update zones state from server results
+                    if (data.results.zones && Array.isArray(data.results.zones)) {
+                        data.results.zones.forEach(z => {
+                            if (window.zonesState[z.id]) {
+                                window.zonesState[z.id].feats = z.feats || window.zonesState[z.id].feats;
+                                window.zonesState[z.id].population = z.population;
+                                window.zonesState[z.id].vulnerability = z.vulnerability;
+                                window.zonesState[z.id].urgency = z.urgency;
+                            }
+                        });
+                    }
+
                     updateDashboardWithResults(data.results);
-                    showToast('Assessment complete! Resource dispatch updated.', '✅');
-                    // Smoothly scroll to the resource dispatch section so user instantly sees the change!
-                    const resSec = document.getElementById('resource-allocation');
-                    if (resSec) {
-                        resSec.scrollIntoView({ behavior: 'smooth' });
+                    const rank1 = data.results.zones && data.results.zones.find(z => z.priority_rank === 1);
+                    const topZoneName = rank1 ? rank1.name : 'Target Sector';
+                    showToast(`Assessment complete! ${topZoneName} is Rank #1 Critical.`, '✅');
+
+                    // Smoothly scroll to the decision card so user instantly sees the change!
+                    const decEl = document.getElementById('decision-action');
+                    if (decEl) {
+                        decEl.scrollIntoView({ behavior: 'smooth' });
                     }
                 } else {
                     showToast('Assessment failed: ' + (data.error || 'Server error'), '❌');

@@ -103,74 +103,74 @@ DEFAULT_RESOURCES = {
 PROTOTYPE_ZONES_CONFIG = [
     {
         'id': 'zone_a',
-        'code': 'ZONE-A',
-        'name': 'Prototype Zone Alpha (Coastal Estuary & Delta Port)',
-        'short_name': 'Zone Alpha',
+        'code': 'ZONE A',
+        'name': 'Zone A',
+        'short_name': 'Zone A',
         'type': 'Coastal Estuary / High Inundation Risk',
         'coordinates': 'Grid 14-E (Coastal Sector)',
-        'population': 220000,
-        'vulnerability': 0.90,
-        'urgency': 0.95,
+        'population': 180000,
+        'vulnerability': 0.85,
+        'urgency': 0.88,
         'accessibility': 'Moderate (Waterways Open, Coastal Roads Vulnerable)',
         'feats': {
-            'MonsoonIntensity': 13, 'TopographyDrainage': 12, 'RiverManagement': 12, 'Deforestation': 11,
-            'Urbanization': 13, 'ClimateChange': 13, 'DamsQuality': 12, 'Siltation': 13,
-            'AgriculturalPractices': 10, 'Encroachments': 12, 'IneffectiveDisasterPreparedness': 13,
-            'DrainageSystems': 12, 'CoastalVulnerability': 14, 'Landslides': 8, 'Watersheds': 11,
-            'DeterioratingInfrastructure': 12, 'PopulationScore': 13, 'WetlandLoss': 13,
-            'InadequatePlanning': 13, 'PoliticalFactors': 11
+            'MonsoonIntensity': 12, 'TopographyDrainage': 11, 'RiverManagement': 11, 'Deforestation': 10,
+            'Urbanization': 12, 'ClimateChange': 12, 'DamsQuality': 11, 'Siltation': 12,
+            'AgriculturalPractices': 9, 'Encroachments': 11, 'IneffectiveDisasterPreparedness': 12,
+            'DrainageSystems': 11, 'CoastalVulnerability': 13, 'Landslides': 7, 'Watersheds': 10,
+            'DeterioratingInfrastructure': 11, 'PopulationScore': 12, 'WetlandLoss': 12,
+            'InadequatePlanning': 12, 'PoliticalFactors': 10
         }
     },
     {
         'id': 'zone_b',
-        'code': 'ZONE-B',
-        'name': 'Prototype Zone Bravo (Downstream Metro Basin)',
-        'short_name': 'Zone Bravo',
+        'code': 'ZONE B',
+        'name': 'Zone B',
+        'short_name': 'Zone B',
         'type': 'High-Density Urban Confluence',
         'coordinates': 'Grid 22-C (Metro Confluence)',
-        'population': 160000,
-        'vulnerability': 0.75,
-        'urgency': 0.78,
+        'population': 190000,
+        'vulnerability': 0.82,
+        'urgency': 0.85,
         'accessibility': 'High (Major Arterial Expressways)',
         'feats': {
             'MonsoonIntensity': 11, 'TopographyDrainage': 9, 'RiverManagement': 10, 'Deforestation': 9,
-            'Urbanization': 14, 'ClimateChange': 10, 'DamsQuality': 9, 'Siltation': 11,
-            'AgriculturalPractices': 7, 'Encroachments': 13, 'IneffectiveDisasterPreparedness': 11,
-            'DrainageSystems': 13, 'CoastalVulnerability': 9, 'Landslides': 6, 'Watersheds': 9,
-            'DeterioratingInfrastructure': 13, 'PopulationScore': 12, 'WetlandLoss': 11,
-            'InadequatePlanning': 13, 'PoliticalFactors': 10
+            'Urbanization': 13, 'ClimateChange': 10, 'DamsQuality': 9, 'Siltation': 11,
+            'AgriculturalPractices': 7, 'Encroachments': 12, 'IneffectiveDisasterPreparedness': 11,
+            'DrainageSystems': 12, 'CoastalVulnerability': 9, 'Landslides': 6, 'Watersheds': 9,
+            'DeterioratingInfrastructure': 12, 'PopulationScore': 12, 'WetlandLoss': 11,
+            'InadequatePlanning': 12, 'PoliticalFactors': 10
         }
     },
     {
         'id': 'zone_c',
-        'code': 'ZONE-C',
-        'name': 'Prototype Zone Charlie (Upstream River Valley)',
-        'short_name': 'Zone Charlie',
+        'code': 'ZONE C',
+        'name': 'Zone C',
+        'short_name': 'Zone C',
         'type': 'Mountain Valley & Spillway Reach',
         'coordinates': 'Grid 08-A (Highland Reach)',
-        'population': 65000,
-        'vulnerability': 0.65,
-        'urgency': 0.62,
+        'population': 110000,
+        'vulnerability': 0.75,
+        'urgency': 0.72,
         'accessibility': 'Challenging (Mountain Passes Subject to Landslides)',
         'feats': {
-            'MonsoonIntensity': 9, 'TopographyDrainage': 7, 'RiverManagement': 8, 'Deforestation': 12,
-            'Urbanization': 6, 'ClimateChange': 8, 'DamsQuality': 11, 'Siltation': 8,
+            'MonsoonIntensity': 9, 'TopographyDrainage': 7, 'RiverManagement': 8, 'Deforestation': 11,
+            'Urbanization': 6, 'ClimateChange': 8, 'DamsQuality': 10, 'Siltation': 8,
             'AgriculturalPractices': 9, 'Encroachments': 7, 'IneffectiveDisasterPreparedness': 8,
-            'DrainageSystems': 7, 'CoastalVulnerability': 4, 'Landslides': 12, 'Watersheds': 10,
+            'DrainageSystems': 7, 'CoastalVulnerability': 4, 'Landslides': 11, 'Watersheds': 10,
             'DeterioratingInfrastructure': 9, 'PopulationScore': 7, 'WetlandLoss': 8,
             'InadequatePlanning': 8, 'PoliticalFactors': 7
         }
     },
     {
         'id': 'zone_d',
-        'code': 'ZONE-D',
-        'name': 'Prototype Zone Delta (Agricultural Lowlands)',
-        'short_name': 'Zone Delta',
+        'code': 'ZONE D',
+        'name': 'Zone D',
+        'short_name': 'Zone D',
         'type': 'Rural Floodplain & Farmland Basin',
         'coordinates': 'Grid 31-F (Rural Plain)',
         'population': 95000,
-        'vulnerability': 0.50,
-        'urgency': 0.45,
+        'vulnerability': 0.55,
+        'urgency': 0.50,
         'accessibility': 'Moderate (Unpaved Secondary Roads)',
         'feats': {
             'MonsoonIntensity': 7, 'TopographyDrainage': 6, 'RiverManagement': 6, 'Deforestation': 7,
@@ -183,14 +183,14 @@ PROTOTYPE_ZONES_CONFIG = [
     },
     {
         'id': 'zone_e',
-        'code': 'ZONE-E',
-        'name': 'Prototype Zone Echo (Highland Foothills)',
-        'short_name': 'Zone Echo',
+        'code': 'ZONE E',
+        'name': 'Zone E',
+        'short_name': 'Zone E',
         'type': 'Elevated Natural Drainage Buffer',
         'coordinates': 'Grid 02-B (Plateau Reserve)',
-        'population': 50000,
-        'vulnerability': 0.28,
-        'urgency': 0.22,
+        'population': 60000,
+        'vulnerability': 0.30,
+        'urgency': 0.25,
         'accessibility': 'Good (Highland Expressways Clear)',
         'feats': {
             'MonsoonIntensity': 3, 'TopographyDrainage': 4, 'RiverManagement': 4, 'Deforestation': 3,
@@ -514,7 +514,7 @@ def index():
     # Run dynamic multi-zone evaluation so the dashboard opens with full live results!
     results = evaluate_multizone_system(default_zones, default_resources)
 
-    # Inputs dictionary for Zone Alpha (for the telemetry inspector)
+    # Inputs dictionary for Zone A (for the telemetry inspector)
     zone_a_inputs = default_zones[0]['feats']
 
     return render_template(
@@ -547,19 +547,30 @@ def predict_and_allocate():
                 zones = custom_zones
             resources_data = req_json.get('resources', DEFAULT_RESOURCES)
         else:
-            # Traditional form submission: Update Zone Alpha telemetry from form inputs
+            # Traditional form submission:
+            selected_zone_id = form_data.get('selected_zone', 'zone_a').strip().lower()
+            target_idx = 0
+            for idx, z in enumerate(zones):
+                if z['id'].lower() == selected_zone_id:
+                    target_idx = idx
+                    break
+
             feat_values = {}
             for feat in BASE_FEATURES:
-                feat_values[feat] = float(form_data.get(feat, zones[0]['feats'].get(feat, 5.0)))
+                feat_values[feat] = float(form_data.get(feat, zones[target_idx]['feats'].get(feat, 5.0)))
             
-            zones[0]['feats'] = feat_values
+            zones[target_idx]['feats'] = feat_values
             
-            # Target zone overrides from form if supplied
+            # Optional zone overrides
+            if form_data.get('zone_population'):
+                zones[target_idx]['population'] = max(1000, int(form_data.get('zone_population')))
+            if form_data.get('zone_vulnerability'):
+                zones[target_idx]['vulnerability'] = max(0.05, min(1.0, float(form_data.get('zone_vulnerability'))))
+            if form_data.get('zone_urgency'):
+                zones[target_idx]['urgency'] = max(0.05, min(1.0, float(form_data.get('zone_urgency'))))
             if form_data.get('target_sector_name'):
-                zones[0]['name'] = form_data.get('target_sector_name').strip()
-                zones[0]['short_name'] = zones[0]['name'].split('(')[0].strip()
-            if form_data.get('target_population'):
-                zones[0]['population'] = max(1000, int(form_data.get('target_population', 180000)))
+                zones[target_idx]['name'] = form_data.get('target_sector_name').strip()
+                zones[target_idx]['short_name'] = zones[target_idx]['name']
 
             # Read resource constraints with fallback to defaults
             resources_data = {
@@ -632,30 +643,75 @@ def api_assess():
 def api_demo_scenario():
     """
     Returns preset operational scenarios for instant 1-click hackathon demonstration (Phase 20).
-    Allows judges to evaluate the entire pipeline in under 15 seconds.
+    Demonstrates dynamic prioritization where different zones become Critical Rank 1 based on conditions.
     """
     scenario_type = request.args.get('type', 'cyclone_surge')
     import copy
     zones = copy.deepcopy(PROTOTYPE_ZONES_CONFIG)
 
     if scenario_type == 'cyclone_surge':
-        # Extreme coastal surge in Zone A, high runoff in Zone B
-        for k in ['MonsoonIntensity', 'CoastalVulnerability', 'ClimateChange', 'DrainageSystems', 'WetlandLoss']:
+        # Severe Coastal Cyclone Surge -> ZONE A becomes Critical Rank 1
+        for k in BASE_FEATURES:
             zones[0]['feats'][k] = 14
-        zones[0]['urgency'] = 0.95
-        zones[0]['vulnerability'] = 0.92
+        zones[0]['urgency'] = 0.98
+        zones[0]['vulnerability'] = 0.95
+        zones[0]['population'] = 220000
+        # Other zones moderate
+        for z in zones[1:]:
+            for k in BASE_FEATURES:
+                z['feats'][k] = min(z['feats'][k], 7)
+            z['urgency'] = 0.50
+            z['vulnerability'] = 0.50
+
     elif scenario_type == 'urban_collapse':
-        # Severe urban drainage collapse in Zone B
-        for k in ['Urbanization', 'DrainageSystems', 'DeterioratingInfrastructure', 'Encroachments', 'InadequatePlanning']:
+        # Catastrophic Metro Drainage Inundation -> ZONE B becomes Critical Rank 1
+        for k in BASE_FEATURES:
             zones[1]['feats'][k] = 15
-        zones[1]['urgency'] = 0.90
-        zones[1]['vulnerability'] = 0.88
+        zones[1]['urgency'] = 0.98
+        zones[1]['vulnerability'] = 0.95
+        zones[1]['population'] = 240000
+        # Reduce other zones
+        for idx in [0, 2, 3, 4]:
+            for k in BASE_FEATURES:
+                zones[idx]['feats'][k] = min(zones[idx]['feats'][k], 6)
+            zones[idx]['urgency'] = 0.45
+            zones[idx]['vulnerability'] = 0.45
+
     elif scenario_type == 'dam_spillway':
-        # Mountain reservoir overflow in Zone C
-        for k in ['DamsQuality', 'Landslides', 'Deforestation', 'Watersheds']:
-            zones[2]['feats'][k] = 14
-        zones[2]['urgency'] = 0.85
-        zones[2]['vulnerability'] = 0.80
+        # Mountain Valley Dam Spillway Breach -> ZONE C becomes Critical Rank 1
+        for k in BASE_FEATURES:
+            zones[2]['feats'][k] = 15
+        zones[2]['urgency'] = 0.98
+        zones[2]['vulnerability'] = 0.95
+        zones[2]['population'] = 190000
+        # Reduce other zones
+        for idx in [0, 1, 3, 4]:
+            for k in BASE_FEATURES:
+                zones[idx]['feats'][k] = min(zones[idx]['feats'][k], 6)
+            zones[idx]['urgency'] = 0.45
+            zones[idx]['vulnerability'] = 0.45
+
+    elif scenario_type == 'lowland_flood':
+        # Agricultural Basin Levee Failure -> ZONE D becomes Critical Rank 1
+        for k in BASE_FEATURES:
+            zones[3]['feats'][k] = 15
+        zones[3]['urgency'] = 0.98
+        zones[3]['vulnerability'] = 0.95
+        zones[3]['population'] = 200000
+        # Reduce other zones
+        for idx in [0, 1, 2, 4]:
+            for k in BASE_FEATURES:
+                zones[idx]['feats'][k] = min(zones[idx]['feats'][k], 6)
+            zones[idx]['urgency'] = 0.45
+            zones[idx]['vulnerability'] = 0.45
+
+    elif scenario_type == 'seasonal_baseline':
+        # Dry weather / seasonal baseline -> All Standby / Routine Monitoring
+        for z in zones:
+            for k in BASE_FEATURES:
+                z['feats'][k] = 4
+            z['urgency'] = 0.30
+            z['vulnerability'] = 0.30
 
     results = evaluate_multizone_system(zones, DEFAULT_RESOURCES)
     return jsonify({
