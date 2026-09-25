@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AegisAlloc | Disaster Management Emergency Resource Allocation Dashboard</title>
+    <!-- Google Fonts for crisp typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0f1d;
+            --bg-secondary: #0f172a;
+            --bg-card: rgba(17, 24, 39, 0.75);
+            --bg-card-hover: rgba(30, 41, 59, 0.85);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(59, 130, 246, 0.4);
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-indigo: #6366f1;
+            
+            --status-critical: #ef4444;
+            --status-critical-bg: rgba(239, 68, 68, 0.15);
+            --status-alert: #f59e0b;
+            --status-alert-bg: rgba(245, 158, 11, 0.15);
+            --status-standby: #10b981;
+            --status-standby-bg: rgba(16, 185, 129, 0.15);
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            
+            --shadow-glow: 0 0 25px rgba(59, 130, 246, 0.15);
+            --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+            --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.2) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(14, 116, 144, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(15, 23, 42, 0.8) 0px, transparent 70%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* Top Navigation / Command Header */
+        .top-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(10, 15, 29, 0.85);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 32px;
+        }
+
+        .nav-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .brand-block {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .nav-meta-badges {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .meta-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .meta-pill.active-indicator {
+            border-color: rgba(16, 185, 129, 0.4);
+            color: #34d399;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #10b981;
+            box-shadow: 0 0 10px #10b981;
+            animation: pulse-dot 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.6; }
+        }
+
+        /* Main Container */
+        .dashboard-container {
+            max-width: 1440px;
+            margin: 32px auto 0;
+            padding: 0 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.35), rgba(15, 23, 42, 0.8));
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .hero-title-group h1 {
+            font-size: 2.1rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+
+        .hero-title-group h1 span {
+            background: linear-gradient(90deg, #60a5fa, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-title-group p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 820px;
+        }
+
+        .hero-stats-strip {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 160px;
+        }
+
+        .hero-stat-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .hero-stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-primary);
+        }
+
+        /* Section Titles */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .section-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .level-badge {
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .section-title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Level 1: Analytics Section */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 24px;
+        }
+
+        .analytics-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .analytics-card:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .card-header-inner {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .card-badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-secondary);
+        }
+
+        .chart-img-container {
+            padding: 16px;
+            background: #090e1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 280px;
+        }
+
+        .chart-img-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        .chart-img-container img:hover {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .card-footer-info {
+            padding: 14px 24px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.4);
+        }
+
+        /* Level 2: Inputs Form Section */
+        .form-section-wrapper {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            box-shadow: var(--shadow-card);
+        }
+
+        /* Preset Scenarios Strip */
+        .scenario-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding: 16px;
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .scenario-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #93c5fd;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .scenario-chips {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .chip-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chip-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.5);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        /* Category Grid */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .category-box {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cat-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cat-count {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 8px;
+            border-radius: 999px;
+        }
+
+        .param-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .param-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .param-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .param-val-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #60a5fa;
+            background: rgba(59, 130, 246, 0.12);
+            padding: 2px 8px;
+            border-radius: 4px;
+            min-width: 32px;
+            text-align: center;
+        }
+
+        .input-control-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slider-input {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.12);
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .slider-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+            transition: var(--transition);
+        }
+
+        .slider-input::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: #60a5fa;
+        }
+
+        .number-input-mini {
+            width: 54px;
+            padding: 4px 6px;
+            background: rgba(10, 15, 29, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .number-input-mini:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        /* Emergency Inventory Constraints Section */
+        .resources-box {
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.25), rgba(15, 23, 42, 0.7));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 28px;
+        }
+
+        .resources-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .resources-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .resources-inputs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
+
+        .resource-field-card {
+            background: rgba(10, 15, 29, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .resource-field-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .resource-text-input {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            transition: var(--transition);
+        }
+
+        .resource-text-input:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Action Row */
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding-top: 12px;
+        }
+
+        .live-stress-summary {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+
+        .stress-metric-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stress-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .stress-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #2563eb, #0284c7);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 16px 36px;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+            transition: var(--transition);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 28px rgba(37, 99, 235, 0.6);
+            background: linear-gradient(135deg, #1d4ed8, #0369a1);
+        }
+
+        /* Level 3: Decision Engine Matrix */
+        .results-section {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            scroll-margin-top: 100px;
+        }
+
+        /* Hero Results Card */
+        .target-eval-hero {
+            background: linear-gradient(135deg, rgba(17, 24, 39, 0.95), rgba(30, 41, 59, 0.85));
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-highlight);
+            padding: 32px;
+            box-shadow: var(--shadow-glow), var(--shadow-card);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 32px;
+            align-items: center;
+        }
+
+        @media (max-width: 900px) {
+            .target-eval-hero {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .eval-info-block {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .eval-tagline {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .eval-district-title {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .eval-summary-desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            max-width: 650px;
+            line-height: 1.6;
+        }
+
+        .eval-status-display {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        @media (max-width: 900px) {
+            .eval-status-display {
+                align-items: flex-start;
+            }
+        }
+
+        .risk-gauge-box {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .risk-number-large {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .risk-label-sub {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Dispatch Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .status-badge.critical {
+            background: var(--status-critical-bg);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            box-shadow: 0 0 16px rgba(239, 68, 68, 0.25);
+        }
+
+        .status-badge.alert {
+            background: var(--status-alert-bg);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            box-shadow: 0 0 16px rgba(245, 158, 11, 0.25);
+        }
+
+        .status-badge.standby {
+            background: var(--status-standby-bg);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
+        }
+
+        /* Decision Matrix Table Card */
+        .matrix-table-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        .matrix-header {
+            padding: 24px 32px;
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .dispatch-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .dispatch-table th {
+            padding: 16px 24px;
+            background: rgba(10, 15, 29, 0.9);
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.06em;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .dispatch-table td {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        .dispatch-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .sector-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sector-name {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .sector-tag {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .mono-stat {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+        }
+
+        .alloc-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .alloc-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .alloc-subtext {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .alloc-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .alloc-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #3b82f6, #06b6d4);
+        }
+
+        .table-total-row td {
+            background: rgba(15, 23, 42, 0.95);
+            font-weight: 700;
+            border-top: 2px solid rgba(59, 130, 246, 0.3);
+            border-bottom: none;
+            padding: 18px 24px;
+        }
+
+        /* Allocation Cards & Graphs */
+        .allocation-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .resource-breakdown-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .rb-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rb-title {
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rb-total-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .stacked-alloc-bar {
+            height: 24px;
+            width: 100%;
+            border-radius: 8px;
+            display: flex;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .bar-seg {
+            height: 100%;
+            transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .seg-a { background: #3b82f6; }
+        .seg-b { background: #f59e0b; }
+        .seg-c { background: #10b981; }
+
+        .legend-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* Footer */
+        .app-footer {
+            margin-top: 60px;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .app-footer a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 768px) {
+            .top-nav { padding: 12px 16px; }
+            .dashboard-container { padding: 0 16px; margin-top: 20px; }
+            .hero-banner { padding: 20px; }
+            .analytics-grid { grid-template-columns: 1fr; }
+            .form-section-wrapper { padding: 20px; }
+            .matrix-header { padding: 18px 20px; }
+            .dispatch-table th, .dispatch-table td { padding: 12px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Command Navigation -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <div class="brand-block">
+                <div class="brand-icon">🌊</div>
+                <div>
+                    <div class="brand-title">AegisAlloc Command Center</div>
+                    <div class="brand-subtitle">DataQuest 2026 • Problem Statement 7.3</div>
+                </div>
+            </div>
+
+            <div class="nav-meta-badges">
+                <div class="meta-pill">
+                    <span>Model:</span>
+                    <strong style="color: #60a5fa;">LightGBM Regressor (1.1M Trained)</strong>
+                </div>
+                <div class="meta-pill">
+                    <span>Algorithm:</span>
+                    <strong style="color: #38bdf8;">Constrained Proportional Optimization</strong>
+                </div>
+                <div class="meta-pill active-indicator">
+                    <span class="live-dot"></span>
+                    <span>Decision Engine Ready</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+
+        <!-- Hero Mission Banner -->
+        <section class="hero-banner">
+            <div class="hero-header">
+                <div class="hero-title-group">
+                    <h1>Disaster Management <span>Emergency Resource Allocation</span></h1>
+                    <p>
+                        Real-time AI flood risk assessment coupled with a multi-sector constrained dispatch optimization engine. 
+                        Calibrated on over 1.1 million environmental records to eliminate resource bottlenecks during rapid-onset flood events.
+                    </p>
+                </div>
+            </div>
+
+            <div class="hero-stats-strip">
+                <div class="hero-stat-card">
+                    <span class="hero-stat-label">Track & Problem</span>
+                    <span class="hero-stat-value" style="font-size: 1.1rem; color: #60a5fa;">Track 7 • PS 7.3</span>
+                </div>
+                <div class="hero-stat-card">
+                    <span class="hero-stat-label">Decision Pipeline</span>
+                    <span class="hero-stat-value" style="font-size: 1.1rem; color: #38bdf8;">Level 1 &rarr; 2 &rarr; 3</span>
+                </div>
+                <div class="hero-stat-card">
+                    <span class="hero-stat-label">Constraint Guarantee</span>
+                    <span class="hero-stat-value" style="font-size: 1.1rem; color: #34d399;">100% Exact Conservation</span>
+                </div>
+                <div class="hero-stat-card">
+                    <span class="hero-stat-label">Model Verification</span>
+                    <span class="hero-stat-value" style="font-size: 1.1rem; color: #f472b6;">20 Base + 2 Engineered</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- LEVEL 1: Historical Analytics & Feature Intelligence -->
+        <section id="level1-analytics">
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <span class="level-badge">Level 1</span>
+                    <div>
+                        <h2 class="section-title">Historical Disaster Analytics & Feature Ranking</h2>
+                        <p class="section-subtitle">Exploratory Data Analysis and Feature Importance from 1.1M training events</p>
+                    </div>
+                </div>
+                <div class="meta-pill">
+                    <span>Artifact Source:</span>
+                    <span style="font-family: 'JetBrains Mono', monospace; color: #93c5fd;">/static/level1_*.png</span>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <!-- Feature Ranking Plot -->
+                <div class="analytics-card">
+                    <div class="card-header-inner">
+                        <span class="card-title">Feature Importance Ranking</span>
+                        <span class="card-badge">LightGBM Gain Score</span>
+                    </div>
+                    <div class="chart-img-container">
+                        <img src="{{ url_for('static', filename='level1_feature_ranking.png') }}" alt="Level 1 Feature Ranking" loading="lazy">
+                    </div>
+                    <div class="card-footer-info">
+                        <strong>Key Insight:</strong> Monsoon Intensity, Siltation, and Wetland Loss represent the highest split weights, directly governing runoff amplification and retention vulnerability.
+                    </div>
+                </div>
+
+                <!-- Flood Distribution Plot -->
+                <div class="analytics-card">
+                    <div class="card-header-inner">
+                        <span class="card-title">Flood Risk Probability Distribution</span>
+                        <span class="card-badge">1.1M Population Density</span>
+                    </div>
+                    <div class="chart-img-container">
+                        <img src="{{ url_for('static', filename='level1_flood_distribution.png') }}" alt="Level 1 Flood Distribution" loading="lazy">
+                    </div>
+                    <div class="card-footer-info">
+                        <strong>Key Insight:</strong> The flood risk density forms a continuous Gaussian envelope centered at 0.50 with tail risks exceeding 0.65 demanding immediate emergency intervention.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LEVEL 2 & 3: Input Parameters and Emergency Inventory -->
+        <section id="level2-parameters">
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <span class="level-badge">Level 2 & 3</span>
+                    <div>
+                        <h2 class="section-title">Environmental Telemetry & Resource Configuration</h2>
+                        <p class="section-subtitle">Input real-time environmental factors for Target District and assign emergency inventory</p>
+                    </div>
+                </div>
+            </div>
+
+            <form action="{{ url_for('predict_and_allocate') }}" method="POST" id="eval-form" class="form-section-wrapper">
+                
+                <!-- Quick Preset Chips -->
+                <div class="scenario-selector">
+                    <span class="scenario-label">⚡ Incident Presets:</span>
+                    <div class="scenario-chips">
+                        <button type="button" class="chip-btn" onclick="applyPreset('critical')">🚨 Extreme Monsoon Surge (Critical)</button>
+                        <button type="button" class="chip-btn" onclick="applyPreset('urban')">⚠️ Urban Drainage Collapse (Alert)</button>
+                        <button type="button" class="chip-btn" onclick="applyPreset('moderate')">⚖️ Seasonal Moderate Rainfall</button>
+                        <button type="button" class="chip-btn" onclick="applyPreset('drought')">🛡️ Dry Weather Baseline (Standby)</button>
+                        <button type="button" class="chip-btn" onclick="applyPreset('reset')">🔄 Reset All to 5.0</button>
+                    </div>
+                </div>
+
+                <!-- 20 Base Environmental Parameters (Grouped logically) -->
+                <div class="categories-grid">
+                    {% for cat_name, cat_features in feature_categories.items() %}
+                    <div class="category-box">
+                        <div class="category-header">
+                            <span class="cat-title">{{ cat_name }}</span>
+                            <span class="cat-count">{{ cat_features|length }} Parameters</span>
+                        </div>
+                        {% for feat_key, feat_label, feat_desc in cat_features %}
+                        <div class="param-row" title="{{ feat_desc }}">
+                            <div class="param-meta">
+                                <label for="{{ feat_key }}" class="param-label">{{ feat_label }}</label>
+                                <span class="param-val-badge" id="badge-{{ feat_key }}">{{ inputs[feat_key] if inputs else 5 }}</span>
+                            </div>
+                            <div class="input-control-row">
+                                <input 
+                                    type="range" 
+                                    min="1" 
+                                    max="15" 
+                                    step="1" 
+                                    id="range-{{ feat_key }}" 
+                                    class="slider-input" 
+                                    value="{{ inputs[feat_key] if inputs else 5 }}"
+                                    oninput="syncSlider('{{ feat_key }}', this.value)"
+                                >
+                                <input 
+                                    type="number" 
+                                    min="1" 
+                                    max="15" 
+                                    step="1" 
+                                    name="{{ feat_key }}" 
+                                    id="{{ feat_key }}" 
+                                    class="number-input-mini" 
+                                    value="{{ inputs[feat_key] if inputs else 5 }}"
+                                    oninput="syncNumber('{{ feat_key }}', this.value)"
+                                    required
+                                >
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Emergency Inventory & Sector Target Constraints -->
+                <div class="resources-box">
+                    <div class="resources-title">
+                        <span>📦 Emergency Dispatch Constraints & Target Sector Profile</span>
+                    </div>
+                    <p class="resources-subtitle">
+                        Specify available supply pool to be allocated across sectors weighted by (Risk Score × Sector Population).
+                    </p>
+
+                    <div class="resources-inputs-grid">
+                        <div class="resource-field-card">
+                            <label class="resource-field-label">🎯 Target Sector Name</label>
+                            <input 
+                                type="text" 
+                                name="target_sector_name" 
+                                class="resource-text-input" 
+                                style="font-family: inherit; font-size: 0.95rem;" 
+                                value="{{ resources.target_sector_name if resources else 'District Alpha (Target District)' }}" 
+                                required
+                            >
+                        </div>
+                        <div class="resource-field-card">
+                            <label class="resource-field-label">👥 Target Population</label>
+                            <input 
+                                type="number" 
+                                name="target_population" 
+                                class="resource-text-input" 
+                                value="{{ resources.target_population if resources else 120000 }}" 
+                                min="1000" 
+                                step="1000" 
+                                required
+                            >
+                        </div>
+                        <div class="resource-field-card">
+                            <label class="resource-field-label">🚤 Available Rescue Boats</label>
+                            <input 
+                                type="number" 
+                                name="total_boats" 
+                                class="resource-text-input" 
+                                value="{{ resources.total_boats if resources else 50 }}" 
+                                min="0" 
+                                step="1" 
+                                required
+                            >
+                        </div>
+                        <div class="resource-field-card">
+                            <label class="resource-field-label">🚑 Medical Emergency Teams</label>
+                            <input 
+                                type="number" 
+                                name="total_medical" 
+                                class="resource-text-input" 
+                                value="{{ resources.total_medical if resources else 30 }}" 
+                                min="0" 
+                                step="1" 
+                                required
+                            >
+                        </div>
+                        <div class="resource-field-card">
+                            <label class="resource-field-label">🍲 Relief Food & Supply Kits</label>
+                            <input 
+                                type="number" 
+                                name="total_food" 
+                                class="resource-text-input" 
+                                value="{{ resources.total_food if resources else 2500 }}" 
+                                min="0" 
+                                step="50" 
+                                required
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Engine Telemetry & Trigger Button -->
+                <div class="action-row">
+                    <div class="live-stress-summary">
+                        <div class="stress-metric-item">
+                            <span class="stress-label">Engineered Stress Sum:</span>
+                            <span class="stress-val" id="telemetry-sum">100.0</span>
+                        </div>
+                        <div class="stress-metric-item">
+                            <span class="stress-label">Stress Std Dev:</span>
+                            <span class="stress-val" id="telemetry-std">0.0000</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="btn-submit">
+                        <span>⚡ Predict Risk & Optimize Resource Allocation</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- LEVEL 3: Operational Dispatch Decision Matrix -->
+        {% if results %}
+        <section id="level3-decision-matrix" class="results-section">
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <span class="level-badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4);">Level 3 Active</span>
+                    <div>
+                        <h2 class="section-title">Operational Dispatch Decision Matrix</h2>
+                        <p class="section-subtitle">Constrained proportional deployment results across the 3 operational sectors</p>
+                    </div>
+                </div>
+                <div class="meta-pill" style="border-color: rgba(59, 130, 246, 0.4);">
+                    <span style="color: #60a5fa;">Status:</span>
+                    <strong>Optimal Solution Converged</strong>
+                </div>
+            </div>
+
+            <!-- Target Sector Hero Evaluation Banner -->
+            <div class="target-eval-hero">
+                <div class="eval-info-block">
+                    <div class="eval-tagline">
+                        <span>Operational Zone Assessment:</span>
+                        <strong style="color: #60a5fa;">{{ results.sectors[0].name }}</strong>
+                    </div>
+                    <div class="eval-district-title">
+                        Flood Vulnerability Index: {{ results.target_risk_pct }}%
+                    </div>
+                    <div class="eval-summary-desc">
+                        {{ results.target_status.description }}
+                        Proportional resource distribution computed against total demographic impact weight 
+                        <strong>({{ results.sectors[0].impact_weight | int }})</strong> representing <strong>{{ results.sectors[0].weight_pct }}%</strong> of regional urgency.
+                    </div>
+                </div>
+
+                <div class="eval-status-display">
+                    <div class="status-badge {{ results.target_status.badge }}">
+                        <span>{{ results.target_status.level }}</span>
+                    </div>
+                    <div class="risk-gauge-box">
+                        <span class="risk-number-large" style="color: {{ results.target_status.color }};">
+                            {{ "%.3f"|format(results.target_risk) }}
+                        </span>
+                        <span class="risk-label-sub">Predicted Probability (0-1)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decision Matrix Table -->
+            <div class="matrix-table-card">
+                <div class="matrix-header">
+                    <div>
+                        <h3 style="font-size: 1.15rem; font-weight: 700;">Multi-Sector Dispatch Allocation Table</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary);">
+                            Exact discrete integer resource counts calculated via Largest Remainder Method
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button type="button" class="chip-btn" onclick="window.print()">🖨️ Print Dispatch Order</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="dispatch-table">
+                        <thead>
+                            <tr>
+                                <th>Sector / Jurisdiction</th>
+                                <th>Population</th>
+                                <th>Risk Score</th>
+                                <th>Dispatch Status</th>
+                                <th>Impact Weight</th>
+                                <th>Rescue Boats</th>
+                                <th>Medical Teams</th>
+                                <th>Relief Food Kits</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sector in results.sectors %}
+                            <tr>
+                                <td>
+                                    <div class="sector-cell">
+                                        <span class="sector-name">{{ sector.name }}</span>
+                                        <span class="sector-tag">{{ sector.type }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="mono-stat">{{ "{:,}".format(sector.population) }}</span>
+                                </td>
+                                <td>
+                                    <span class="mono-stat" style="color: {{ sector.status.color }}; font-weight: 700;">
+                                        {{ "%.1f"|format(sector.risk_pct) }}%
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-badge {{ sector.status.badge }}">
+                                        {{ sector.status.level }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="alloc-cell">
+                                        <span class="mono-stat">{{ "{:,}".format(sector.impact_weight | int) }}</span>
+                                        <span class="alloc-subtext">{{ sector.weight_pct }}% of total</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="alloc-cell">
+                                        <span class="alloc-number" style="color: #60a5fa;">{{ sector.boats }} <span style="font-size: 0.75rem; font-weight: 500;">Units</span></span>
+                                        <div class="alloc-bar-bg">
+                                            <div class="alloc-bar-fill" style="width: {{ sector.boats_pct }}%;"></div>
+                                        </div>
+                                        <span class="alloc-subtext">{{ sector.boats_pct }}% supply</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="alloc-cell">
+                                        <span class="alloc-number" style="color: #38bdf8;">{{ sector.medical }} <span style="font-size: 0.75rem; font-weight: 500;">Teams</span></span>
+                                        <div class="alloc-bar-bg">
+                                            <div class="alloc-bar-fill" style="width: {{ sector.med_pct }}%; background: linear-gradient(90deg, #06b6d4, #10b981);"></div>
+                                        </div>
+                                        <span class="alloc-subtext">{{ sector.med_pct }}% supply</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="alloc-cell">
+                                        <span class="alloc-number" style="color: #34d399;">{{ "{:,}".format(sector.food) }} <span style="font-size: 0.75rem; font-weight: 500;">Kits</span></span>
+                                        <div class="alloc-bar-bg">
+                                            <div class="alloc-bar-fill" style="width: {{ sector.food_pct }}%; background: linear-gradient(90deg, #10b981, #f59e0b);"></div>
+                                        </div>
+                                        <span class="alloc-subtext">{{ sector.food_pct }}% supply</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-total-row">
+                                <td>
+                                    <div class="sector-cell">
+                                        <span class="sector-name" style="color: #93c5fd;">REGIONAL TOTALS</span>
+                                        <span class="sector-tag">Inventory Conservation Check</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="mono-stat" style="color: #e2e8f0;">{{ "{:,}".format(results.totals.total_population) }}</span>
+                                </td>
+                                <td>
+                                    <span class="mono-stat" style="color: #94a3b8;">Avg {{ results.totals.avg_risk }}%</span>
+                                </td>
+                                <td>
+                                    <span style="color: #34d399; font-size: 0.8rem; font-weight: 700;">✓ CONSERVED</span>
+                                </td>
+                                <td>
+                                    <span class="mono-stat" style="color: #94a3b8;">100.0%</span>
+                                </td>
+                                <td>
+                                    <span class="alloc-number" style="color: #60a5fa;">{{ results.totals.allocated_boats }} / {{ results.totals.total_boats }}</span>
+                                </td>
+                                <td>
+                                    <span class="alloc-number" style="color: #38bdf8;">{{ results.totals.allocated_medical }} / {{ results.totals.total_medical }}</span>
+                                </td>
+                                <td>
+                                    <span class="alloc-number" style="color: #34d399;">{{ "{:,}".format(results.totals.allocated_food) }} / {{ "{:,}".format(results.totals.total_food) }}</span>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Proportional Share Visualization Cards -->
+            <div class="allocation-summary-grid">
+                <!-- Boats Distribution -->
+                <div class="resource-breakdown-card">
+                    <div class="rb-header">
+                        <span class="rb-title">🚤 Rescue Boats Allocation</span>
+                        <span class="rb-total-badge">{{ results.totals.allocated_boats }} Boats</span>
+                    </div>
+                    <div class="stacked-alloc-bar">
+                        <div class="bar-seg seg-a" style="width: {{ results.sectors[0].boats_pct }}%;" title="{{ results.sectors[0].name }}: {{ results.sectors[0].boats }}"></div>
+                        <div class="bar-seg seg-b" style="width: {{ results.sectors[1].boats_pct }}%;" title="{{ results.sectors[1].name }}: {{ results.sectors[1].boats }}"></div>
+                        <div class="bar-seg seg-c" style="width: {{ results.sectors[2].boats_pct }}%;" title="{{ results.sectors[2].name }}: {{ results.sectors[2].food }}"></div>
+                    </div>
+                    <div class="legend-row">
+                        <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> {{ results.sectors[0].name.split('(')[0] }}: <strong>{{ results.sectors[0].boats }}</strong></div>
+                        <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Sector Bravo: <strong>{{ results.sectors[1].boats }}</strong></div>
+                        <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Sector Charlie: <strong>{{ results.sectors[2].boats }}</strong></div>
+                    </div>
+                </div>
+
+                <!-- Medical Teams Distribution -->
+                <div class="resource-breakdown-card">
+                    <div class="rb-header">
+                        <span class="rb-title">🚑 Medical Emergency Teams</span>
+                        <span class="rb-total-badge">{{ results.totals.allocated_medical }} Teams</span>
+                    </div>
+                    <div class="stacked-alloc-bar">
+                        <div class="bar-seg seg-a" style="width: {{ results.sectors[0].med_pct }}%;" title="{{ results.sectors[0].name }}: {{ results.sectors[0].medical }}"></div>
+                        <div class="bar-seg seg-b" style="width: {{ results.sectors[1].med_pct }}%;" title="{{ results.sectors[1].name }}: {{ results.sectors[1].medical }}"></div>
+                        <div class="bar-seg seg-c" style="width: {{ results.sectors[2].med_pct }}%;" title="{{ results.sectors[2].name }}: {{ results.sectors[2].medical }}"></div>
+                    </div>
+                    <div class="legend-row">
+                        <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> {{ results.sectors[0].name.split('(')[0] }}: <strong>{{ results.sectors[0].medical }}</strong></div>
+                        <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Sector Bravo: <strong>{{ results.sectors[1].medical }}</strong></div>
+                        <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Sector Charlie: <strong>{{ results.sectors[2].medical }}</strong></div>
+                    </div>
+                </div>
+
+                <!-- Food Kits Distribution -->
+                <div class="resource-breakdown-card">
+                    <div class="rb-header">
+                        <span class="rb-title">🍲 Relief Food Kits</span>
+                        <span class="rb-total-badge">{{ "{:,}".format(results.totals.allocated_food) }} Kits</span>
+                    </div>
+                    <div class="stacked-alloc-bar">
+                        <div class="bar-seg seg-a" style="width: {{ results.sectors[0].food_pct }}%;" title="{{ results.sectors[0].name }}: {{ results.sectors[0].food }}"></div>
+                        <div class="bar-seg seg-b" style="width: {{ results.sectors[1].food_pct }}%;" title="{{ results.sectors[1].name }}: {{ results.sectors[1].food }}"></div>
+                        <div class="bar-seg seg-c" style="width: {{ results.sectors[2].food_pct }}%;" title="{{ results.sectors[2].name }}: {{ results.sectors[2].food }}"></div>
+                    </div>
+                    <div class="legend-row">
+                        <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> {{ results.sectors[0].name.split('(')[0] }}: <strong>{{ results.sectors[0].food }}</strong></div>
+                        <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Sector Bravo: <strong>{{ results.sectors[1].food }}</strong></div>
+                        <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Sector Charlie: <strong>{{ results.sectors[2].food }}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+    </main>
+
+    <footer class="app-footer">
+        <p>AegisAlloc Disaster Management Analytics Engine • DataQuest 2026 Problem Statement 7.3</p>
+        <p style="margin-top: 6px; font-size: 0.78rem;">LightGBM Regressor • Largest Remainder Proportional Resource Optimization</p>
+    </footer>
+
+    <!-- Interactive Client Logic -->
+    <script>
+        const FEATURE_KEYS = {{ base_features | tojson }};
+
+        // Slider and Number synchronization
+        function syncSlider(key, val) {
+            document.getElementById(key).value = val;
+            document.getElementById('badge-' + key).innerText = val;
+            updateTelemetry();
+        }
+
+        function syncNumber(key, val) {
+            val = Math.max(1, Math.min(15, parseFloat(val) || 1));
+            document.getElementById('range-' + key).value = val;
+            document.getElementById('badge-' + key).innerText = val;
+            updateTelemetry();
+        }
+
+        // Live calculation of Level 2 Engineered Features (Sum and Std)
+        function updateTelemetry() {
+            let values = [];
+            FEATURE_KEYS.forEach(function(k) {
+                const el = document.getElementById(k);
+                if (el) {
+                    values.push(parseFloat(el.value) || 5);
+                }
+            });
+
+            if (values.length === 0) return;
+
+            const sum = values.reduce((a, b) => a + b, 0);
+            const mean = sum / values.length;
+            const variance = values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (values.length - 1);
+            const std = Math.sqrt(variance);
+
+            document.getElementById('telemetry-sum').innerText = sum.toFixed(1);
+            document.getElementById('telemetry-std').innerText = std.toFixed(4);
+        }
+
+        // Incident Presets for quick evaluation
+        const PRESETS = {
+            critical: {
+                MonsoonIntensity: 13, TopographyDrainage: 11, RiverManagement: 12, Deforestation: 11,
+                Urbanization: 12, ClimateChange: 13, DamsQuality: 12, Siltation: 13,
+                AgriculturalPractices: 10, Encroachments: 12, IneffectiveDisasterPreparedness: 13,
+                DrainageSystems: 12, CoastalVulnerability: 11, Landslides: 10, Watersheds: 11,
+                DeterioratingInfrastructure: 12, PopulationScore: 13, WetlandLoss: 12,
+                InadequatePlanning: 13, PoliticalFactors: 11
+            },
+            urban: {
+                MonsoonIntensity: 10, TopographyDrainage: 9, RiverManagement: 8, Deforestation: 7,
+                Urbanization: 14, ClimateChange: 9, DamsQuality: 7, Siltation: 8,
+                AgriculturalPractices: 5, Encroachments: 13, IneffectiveDisasterPreparedness: 9,
+                DrainageSystems: 11, CoastalVulnerability: 8, Landslides: 4, Watersheds: 7,
+                DeterioratingInfrastructure: 11, PopulationScore: 13, WetlandLoss: 10,
+                InadequatePlanning: 12, PoliticalFactors: 8
+            },
+            moderate: {
+                MonsoonIntensity: 6, TopographyDrainage: 6, RiverManagement: 5, Deforestation: 5,
+                Urbanization: 6, ClimateChange: 6, DamsQuality: 5, Siltation: 6,
+                AgriculturalPractices: 5, Encroachments: 5, IneffectiveDisasterPreparedness: 5,
+                DrainageSystems: 6, CoastalVulnerability: 5, Landslides: 4, Watersheds: 5,
+                DeterioratingInfrastructure: 5, PopulationScore: 6, WetlandLoss: 5,
+                InadequatePlanning: 5, PoliticalFactors: 5
+            },
+            drought: {
+                MonsoonIntensity: 2, TopographyDrainage: 3, RiverManagement: 3, Deforestation: 2,
+                Urbanization: 3, ClimateChange: 3, DamsQuality: 3, Siltation: 2,
+                AgriculturalPractices: 2, Encroachments: 2, IneffectiveDisasterPreparedness: 2,
+                DrainageSystems: 2, CoastalVulnerability: 2, Landslides: 1, Watersheds: 3,
+                DeterioratingInfrastructure: 2, PopulationScore: 3, WetlandLoss: 2,
+                InadequatePlanning: 2, PoliticalFactors: 2
+            },
+            reset: {
+                MonsoonIntensity: 5, TopographyDrainage: 5, RiverManagement: 5, Deforestation: 5,
+                Urbanization: 5, ClimateChange: 5, DamsQuality: 5, Siltation: 5,
+                AgriculturalPractices: 5, Encroachments: 5, IneffectiveDisasterPreparedness: 5,
+                DrainageSystems: 5, CoastalVulnerability: 5, Landslides: 5, Watersheds: 5,
+                DeterioratingInfrastructure: 5, PopulationScore: 5, WetlandLoss: 5,
+                InadequatePlanning: 5, PoliticalFactors: 5
+            }
+        };
+
+        function applyPreset(presetKey) {
+            const preset = PRESETS[presetKey];
+            if (!preset) return;
+
+            for (const [key, val] of Object.entries(preset)) {
+                const rangeEl = document.getElementById('range-' + key);
+                const numEl = document.getElementById(key);
+                const badgeEl = document.getElementById('badge-' + key);
+
+                if (rangeEl) rangeEl.value = val;
+                if (numEl) numEl.value = val;
+                if (badgeEl) badgeEl.innerText = val;
+            }
+            updateTelemetry();
+        }
+
+        // Initialize telemetry on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTelemetry();
+            // Scroll to results if present
+            const resultsSection = document.getElementById('level3-decision-matrix');
+            if (resultsSection) {
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>
