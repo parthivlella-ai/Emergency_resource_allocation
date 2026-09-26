@@ -17,18 +17,19 @@ class DataAgent:
     def generate_zone_telemetry(self, normalized_loc, custom_zones=None, weather_override=None):
         """
         Partitions the location into operational zones and gathers 20-feature vectors.
+        Reuses weather telemetry across operational zones to achieve sub-second processing.
         """
         zones = custom_zones or self.location_service.generate_operational_zones(normalized_loc)
         location_coords = f"{normalized_loc['latitude']}, {normalized_loc['longitude']}"
 
+        # Fetch live meteorological telemetry once for the regional operational center
+        weather_summary = weather_override or self.data_service.weather_provider.get_weather_data(
+            normalized_loc['latitude'], normalized_loc['longitude']
+        )
+
         enriched_zones = []
-        weather_summary = None
-
         for z in zones:
-            feats, weather = self.data_service.synthesize_zone_features(z, location_coords, weather_override=weather_override)
-            if weather_summary is None:
-                weather_summary = weather
-
+            feats, _ = self.data_service.synthesize_zone_features(z, location_coords, weather_override=weather_summary)
             zone_dict = dict(z)
             zone_dict["feats"] = feats
             enriched_zones.append(zone_dict)

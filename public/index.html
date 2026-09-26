@@ -1106,7 +1106,7 @@
             <div>
                 <strong style="color: #f87171; font-size: 0.95rem;">RESOURCE INVENTORY SHORTAGE DETECTED</strong>
                 <div id="shortage-text" style="font-size: 0.84rem; color: #fecaca; margin-top: 2px;">
-                    Estimated operational requirements exceed localized depot stock. State Disaster Reserve requisition recommended.
+                    Estimated operational requirements exceed localized depot stock.
                 </div>
             </div>
         </div>
@@ -1136,7 +1136,7 @@
             </div>
 
             <div class="decision-rationale" id="decision-rationale-text">
-                High flood probability combines with dense population exposure and critical drainage deficit to require immediate asset deployment.
+                High flood probability combines with dense population exposure to require immediate deployment.
             </div>
 
             <div>
@@ -1220,48 +1220,6 @@
                         <button class="btn-team-ack btn-decline" onclick="handleTeamAck('NDRF-AP-10', 'UNAVAILABLE')">✕ UNAVAILABLE</button>
                     </div>
                 </div>
-                <div class="team-card" id="team-card-SDRF-BOAT-02">
-                    <div>
-                        <div class="team-header">
-                            <div>
-                                <div class="team-name">State Disaster Response Force Marine Squad 2</div>
-                                <div class="team-org">Andhra Pradesh SDRF &bull; Unit: <code>SDRF-BOAT-02</code></div>
-                            </div>
-                            <span class="team-ack-badge ack-standby" id="team-badge-SDRF-BOAT-02">STANDBY</span>
-                        </div>
-                        <div class="team-role-tag">Rapid Inflatable Boat Evacuation</div>
-                        <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 6px;">
-                            📍 Base: Prakasam Barrage North Depot<br>
-                            📞 Direct Line: <strong style="color: #93c5fd;">+91-866-2580202 (Control 1070)</strong><br>
-                            🛠️ Capabilities: Rigid inflatable boats (RIB), life-jackets, elderly & pediatric evacuation carriers
-                        </div>
-                    </div>
-                    <div class="team-actions">
-                        <button class="btn-team-ack btn-accept" onclick="handleTeamAck('SDRF-BOAT-02', 'ACCEPTED')">✓ ACCEPT</button>
-                        <button class="btn-team-ack btn-decline" onclick="handleTeamAck('SDRF-BOAT-02', 'UNAVAILABLE')">✕ UNAVAILABLE</button>
-                    </div>
-                </div>
-                <div class="team-card" id="team-card-EMS-TRIAGE-04">
-                    <div>
-                        <div class="team-header">
-                            <div>
-                                <div class="team-name">Mobile Emergency Medical & Critical Trauma Squad</div>
-                                <div class="team-org">Department of Health & Emergency Medical Services &bull; Unit: <code>EMS-TRIAGE-04</code></div>
-                            </div>
-                            <span class="team-ack-badge ack-standby" id="team-badge-EMS-TRIAGE-04">STANDBY</span>
-                        </div>
-                        <div class="team-role-tag">Field Trauma Triage & Critical Ambulance</div>
-                        <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 6px;">
-                            📍 Base: Government General Hospital Sector Hub<br>
-                            📞 Direct Line: <strong style="color: #93c5fd;">+91-866-2610404 (Emergency 108)</strong><br>
-                            🛠️ Capabilities: Advanced life support ambulances, portable oxygen concentrators, field IV stabilization
-                        </div>
-                    </div>
-                    <div class="team-actions">
-                        <button class="btn-team-ack btn-accept" onclick="handleTeamAck('EMS-TRIAGE-04', 'ACCEPTED')">✓ ACCEPT</button>
-                        <button class="btn-team-ack btn-decline" onclick="handleTeamAck('EMS-TRIAGE-04', 'UNAVAILABLE')">✕ UNAVAILABLE</button>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -1334,33 +1292,6 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
                             <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #60a5fa;">0.842</span></td>
                             <td><span class="action-tier-badge tier-critical">IMMEDIATE RESCUE</span></td>
                         </tr>
-                        <tr>
-                            <td><span class="rank-circle r-2">#2</span></td>
-                            <td><strong style="color: #ffffff;">Bhavanipuram Lowland Reach</strong></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: #94a3b8;">16.524°N, 80.601°E</span></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 600;">145,000</span></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #f59e0b;">76.2%</span></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #60a5fa;">0.725</span></td>
-                            <td><span class="action-tier-badge tier-high">ACTIVE DEPLOYMENT</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="rank-circle r-3">#3</span></td>
-                            <td><strong style="color: #ffffff;">Auto Nagar & Industrial Drainage Corridor</strong></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: #94a3b8;">16.495°N, 80.665°E</span></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 600;">110,000</span></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #3b82f6;">62.4%</span></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #60a5fa;">0.589</span></td>
-                            <td><span class="action-tier-badge tier-moderate">STANDBY SUPPORT</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="rank-circle r-4">#4</span></td>
-                            <td><strong style="color: #ffffff;">Gunadala & Hill-Slope Perimeter</strong></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: #94a3b8;">16.512°N, 80.655°E</span></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 600;">100,000</span></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #10b981;">38.1%</span></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #60a5fa;">0.362</span></td>
-                            <td><span class="action-tier-badge tier-low">MONITORING TIER</span></td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -1379,11 +1310,7 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
             </div>
 
             <div class="allocation-grid" style="margin-top: 16px;" id="resource-cards-grid">
-                
-            <div class="allocation-grid" style="margin-top: 16px;" id="resource-cards-grid">
-                <!-- Dynamically populated by renderAllocationCards -->
-            </div>
-        </section>
+                <div class="allocation-grid" style="margin-top: 16px;" id="resource-cards-grid"></div></section>
 
         <!-- VERIFIED REAL-WORLD DATA SOURCES PANEL -->
         <details class="data-sources-card">
@@ -1404,9 +1331,7 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
                     <tbody id="telemetry-sources-body">
                         
                         <tr><td><strong>Open-Meteo Precipitation Telemetry</strong></td><td style="color: #cbd5e1;">Live Precipitation</td><td><code style="color: #60a5fa;">0.0 mm/24h</code></td><td><span style="color: #34d399; font-size: 0.72rem;">0.98 (API Ingested)</span></td></tr>
-                        <tr><td><strong>Open-Meteo Surface Wind Telemetry</strong></td><td style="color: #cbd5e1;">Surface Wind Speed</td><td><code style="color: #60a5fa;">16.7 km/h</code></td><td><span style="color: #34d399; font-size: 0.72rem;">0.95 (API Ingested)</span></td></tr>
-                        <tr><td><strong>OpenStreetMap Nominatim Geocoder</strong></td><td style="color: #cbd5e1;">Geographic Coordinates</td><td><code style="color: #60a5fa;">16.5062°N, 80.6480°E</code></td><td><span style="color: #34d399; font-size: 0.72rem;">0.99 (Verified)</span></td></tr>
-                        <tr><td><strong>SRTM Digital Elevation Model</strong></td><td style="color: #cbd5e1;">Hydrologic Elevation Gradient</td><td><code style="color: #60a5fa;">19.4m AMSL</code></td><td><span style="color: #34d399; font-size: 0.72rem;">0.92 (Satellite Topo)</span></td></tr>
+                        <tr><td><strong>OpenStreetMap Geocoder & Coordinate Base</strong></td><td style="color: #cbd5e1;">Geographic Coordinates</td><td><code style="color: #60a5fa;">16.5062°N, 80.6480°E</code></td><td><span style="color: #34d399; font-size: 0.72rem;">0.99 (Verified)</span></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -1454,9 +1379,20 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
 
     <!-- Client-side Interactive Logic & Map Scripts -->
     <script>
-        // Support Vercel frontend calling Render backend or same-origin
-        const DEFAULT_RENDER_URL = 'https://emergency-resource-allocation.onrender.com';
-        const API_BASE = window.RENDER_BACKEND_URL || localStorage.getItem('RENDER_API_URL') || (window.location.hostname.includes('vercel.app') ? DEFAULT_RENDER_URL : '');
+        // Universal Backend Connection Management (Supports Render, Vercel proxy, Localhost)
+        const RENDER_BACKEND_URL = 'https://emergency-resource-allocation.onrender.com';
+
+        // Auto-sanitize legacy or invalid stored URLs
+        let storedBackend = localStorage.getItem('RENDER_API_URL');
+        if (storedBackend && (!storedBackend.startsWith('http') || storedBackend.includes('emergency-resource-backend'))) {
+            localStorage.removeItem('RENDER_API_URL');
+            storedBackend = null;
+        }
+
+        const API_BASE = window.RENDER_BACKEND_URL || 
+                         storedBackend || 
+                         (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : RENDER_BACKEND_URL);
+
         window.currentIncidentId = 1;
         window.leafletMap = null;
         window.mapMarkers = [];
@@ -1472,7 +1408,7 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
                 } catch(e) {
                     lbl.innerText = 'Render Linked';
                 }
-            } else if (window.location.hostname.includes('vercel.app')) {
+            } else if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
                 lbl.innerText = 'Render Linked';
             } else {
                 lbl.innerText = 'Connected';
@@ -1480,23 +1416,78 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
         }
 
         function openBackendConfig() {
-            const current = localStorage.getItem('RENDER_API_URL') || '';
+            const current = localStorage.getItem('RENDER_API_URL') || RENDER_BACKEND_URL;
             const newUrl = prompt(
-                'Enter your deployed Render Backend URL:\nExample: https://emergency-resource-backend.onrender.com\n(Leave empty to use same-origin / relative proxy)',
+                'Connected to Render Backend:\n' + RENDER_BACKEND_URL + '\n\nTo change or use a different backend URL, enter it below:',
                 current
             );
             if (newUrl !== null) {
                 const clean = newUrl.trim().replace(/\/$/, '');
-                if (clean) {
+                if (clean && clean !== RENDER_BACKEND_URL) {
                     localStorage.setItem('RENDER_API_URL', clean);
-                    showToast(`Backend connected to: ${clean}`, '🔗');
+                    showToast(`Backend set to: ${clean}`, '🔗');
                 } else {
                     localStorage.removeItem('RENDER_API_URL');
-                    showToast('Backend set to same-origin / proxy.', '🔗');
+                    showToast('Backend set to default Render URL.', '🔗');
                 }
                 updateBackendLabel();
                 setTimeout(() => location.reload(), 600);
             }
+        }
+
+        async function apiPost(endpoint, payload) {
+            const targets = [];
+            // Target 1: Configured API_BASE
+            if (API_BASE && API_BASE !== '') {
+                targets.push(`${API_BASE}${endpoint}`);
+            }
+            // Target 2: Explicit live Render backend
+            if (!targets.includes(`${RENDER_BACKEND_URL}${endpoint}`)) {
+                targets.push(`${RENDER_BACKEND_URL}${endpoint}`);
+            }
+            // Target 3: Relative path fallback
+            if (!targets.includes(endpoint)) {
+                targets.push(endpoint);
+            }
+
+            let lastError = null;
+            for (const url of targets) {
+                try {
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) {
+                        return await res.json();
+                    }
+                    const errData = await res.json().catch(() => ({}));
+                    if (errData.error) throw new Error(errData.error);
+                } catch (e) {
+                    lastError = e;
+                    console.warn(`POST ${url} failed, trying next target:`, e);
+                }
+            }
+            throw lastError || new Error('Network connection to backend failed.');
+        }
+
+        async function apiGet(endpoint) {
+            const targets = [];
+            if (API_BASE && API_BASE !== '') targets.push(`${API_BASE}${endpoint}`);
+            if (!targets.includes(`${RENDER_BACKEND_URL}${endpoint}`)) targets.push(`${RENDER_BACKEND_URL}${endpoint}`);
+            if (!targets.includes(endpoint)) targets.push(endpoint);
+
+            for (const url of targets) {
+                try {
+                    const res = await fetch(url);
+                    if (res.ok) {
+                        return await res.json();
+                    }
+                } catch (e) {
+                    console.warn(`GET ${url} failed:`, e);
+                }
+            }
+            return null;
         }
 
         function showToast(message, icon = '⚡') {
@@ -1629,13 +1620,8 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
 
             try {
                 showToast(`Harvesting telemetry for ${payload.location}...`, '🌐');
-                const res = await fetch(`${API_BASE}/api/incident/analyze`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const data = await res.json();
-                if (data.success) {
+                const data = await apiPost('/api/incident/analyze', payload);
+                if (data && data.success) {
                     window.currentIncidentId = data.incident.id;
 
                     updateIncidentDashboard(data);
@@ -1649,11 +1635,11 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
                         appBtn.innerHTML = '<span>✅ AUTHORIZE & DISPATCH RESPONSE</span>';
                     }
                 } else {
-                    showToast(data.error || 'Failed to analyze incident.', '❌');
+                    showToast(data?.error || 'Failed to analyze incident.', '❌');
                 }
             } catch (err) {
                 console.error(err);
-                showToast('Network error during analysis.', '❌');
+                showToast(err.message || 'Network error during analysis.', '❌');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<span>⚡ ANALYZE & RESPOND</span>';
@@ -1856,13 +1842,11 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
             btn.innerHTML = '<span>⏳ Transmitting Authorized Directives...</span>';
 
             try {
-                const res = await fetch(`${API_BASE}/api/incident/${window.currentIncidentId}/approve`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ officer_name: 'Command Duty Officer', badge_number: 'AUTHORIZED' })
+                const result = await apiPost(`/api/incident/${window.currentIncidentId}/approve`, {
+                    officer_name: 'Command Duty Officer',
+                    badge_number: 'AUTHORIZED'
                 });
-                const result = await res.json();
-                if (result.success) {
+                if (result && result.success) {
                     btn.style.background = '#059669';
                     btn.innerHTML = `<span>✓ DISPATCH AUTHORIZED</span>`;
                     showToast('Emergency dispatch directives transmitted to regional units!', '📡');
@@ -1898,7 +1882,7 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
                 } else {
                     btn.disabled = false;
                     btn.innerHTML = '<span>✅ AUTHORIZE & DISPATCH RESPONSE</span>';
-                    showToast(result.error || 'Dispatch authorization failed.', '❌');
+                    showToast(result?.error || 'Dispatch authorization failed.', '❌');
                 }
             } catch (err) {
                 console.error(err);
@@ -1911,13 +1895,10 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
         // Handle Interactive Field Squad Acknowledgement
         async function handleTeamAck(teamId, action) {
             try {
-                const res = await fetch(`${API_BASE}/api/incident/${window.currentIncidentId}/team/${teamId}/respond`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: action })
+                const result = await apiPost(`/api/incident/${window.currentIncidentId}/team/${teamId}/respond`, {
+                    action: action
                 });
-                const result = await res.json();
-                if (result.success) {
+                if (result && result.success) {
                     const badge = document.getElementById(`team-badge-${teamId}`);
                     if (badge) {
                         badge.className = `team-ack-badge ack-${action.toLowerCase()}`;
@@ -1938,13 +1919,11 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
         async function handleTriggerEscalation() {
             showToast('Simulating upstream cloudburst surge & reservoir release...', '🌧️');
             try {
-                const res = await fetch(`${API_BASE}/api/incident/${window.currentIncidentId}/escalate`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ rainfall_surge_mm: 55.0, dam_release: true })
+                const result = await apiPost(`/api/incident/${window.currentIncidentId}/escalate`, {
+                    rainfall_surge_mm: 55.0,
+                    dam_release: true
                 });
-                const result = await res.json();
-                if (result.success && result.escalation) {
+                if (result && result.success && result.escalation) {
                     const esc = result.escalation;
                     showToast(esc.headline, '⚠️');
 
@@ -1977,41 +1956,28 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
             }
         }
 
-        // Initialize Map and load baseline on page load
+        // Initialize Map and load live baseline on page load
         window.addEventListener('DOMContentLoaded', async () => {
             updateBackendLabel();
             
-            // Check if running on Vercel without custom backend set
-            if (window.location.hostname.includes('vercel.app') && !localStorage.getItem('RENDER_API_URL')) {
-                showToast('Welcome! Click [Set Render URL] in top right to link your Render backend.', '💡');
-            }
-
-            // Fetch live baseline from backend if available
+            // Connect to Live Command Center
             try {
-                const res = await fetch(`${API_BASE}/api/incident/baseline`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.success) {
-                        window.currentIncidentId = data.incident.id;
-                        updateIncidentDashboard(data);
-                        return;
-                    }
+                const data = await apiGet('/api/incident/baseline');
+                if (data && data.success) {
+                    window.currentIncidentId = data.incident.id;
+                    updateIncidentDashboard(data);
+                    return;
                 }
             } catch (err) {
-                console.log('Using pre-seeded operational baseline while backend wakes up:', err);
+                console.log('Using baseline default view:', err);
             }
 
             // Fallback default coordinates and map initialization
             const defaultZones = [
-                { id: 1, name: 'One Town & Commercial Confluence', short_name: 'One Town Reach', coordinates: '16.518°N, 80.612°E', population: 165000, risk_pct: 88.5, priority_score: 0.842, action_tier: 'IMMEDIATE RESCUE', status_color: '#ef4444', status_badge: 'tier-critical', priority_rank: 1, allocations: { boats: { count: 22, pct: 44 }, rescue_teams: { count: 8, pct: 44 }, ambulances: { count: 10, pct: 42 }, medical: { count: 2200, pct: 44 }, food: { count: 5400, pct: 45 }, water: { count: 4500, pct: 45 }, shelters: { count: 180, pct: 45 } }, latitude: 16.518, longitude: 80.612 },
-                { id: 2, name: 'Bhavanipuram Lowland Reach', short_name: 'Bhavanipuram', coordinates: '16.524°N, 80.601°E', population: 145000, risk_pct: 76.2, priority_score: 0.725, action_tier: 'ACTIVE DEPLOYMENT', status_color: '#f59e0b', status_badge: 'tier-high', priority_rank: 2, allocations: { boats: { count: 15, pct: 30 }, rescue_teams: { count: 5, pct: 28 }, ambulances: { count: 7, pct: 29 }, medical: { count: 1500, pct: 30 }, food: { count: 3600, pct: 30 }, water: { count: 3000, pct: 30 }, shelters: { count: 120, pct: 30 } }, latitude: 16.524, longitude: 80.601 },
-                { id: 3, name: 'Auto Nagar Industrial Reach', short_name: 'Auto Nagar', coordinates: '16.495°N, 80.665°E', population: 110000, risk_pct: 62.4, priority_score: 0.589, action_tier: 'STANDBY SUPPORT', status_color: '#3b82f6', status_badge: 'tier-moderate', priority_rank: 3, allocations: { boats: { count: 8, pct: 16 }, rescue_teams: { count: 3, pct: 17 }, ambulances: { count: 4, pct: 17 }, medical: { count: 800, pct: 16 }, food: { count: 1900, pct: 16 }, water: { count: 1600, pct: 16 }, shelters: { count: 65, pct: 16 } }, latitude: 16.495, longitude: 80.665 },
-                { id: 4, name: 'Gunadala Basin', short_name: 'Gunadala', coordinates: '16.512°N, 80.655°E', population: 100000, risk_pct: 38.1, priority_score: 0.362, action_tier: 'MONITORING TIER', status_color: '#10b981', status_badge: 'tier-low', priority_rank: 4, allocations: { boats: { count: 5, pct: 10 }, rescue_teams: { count: 2, pct: 11 }, ambulances: { count: 3, pct: 12 }, medical: { count: 500, pct: 10 }, food: { count: 1100, pct: 9 }, water: { count: 900, pct: 9 }, shelters: { count: 35, pct: 9 } }, latitude: 16.512, longitude: 80.655 }
+                { id: 1, name: 'One Town & Commercial Confluence', short_name: 'One Town', coordinates: '16.518°N, 80.612°E', population: 165000, risk_pct: 88.5, priority_score: 0.842, action_tier: 'IMMEDIATE RESCUE', status_color: '#ef4444', status_badge: 'tier-critical', priority_rank: 1, allocations: { boats: { count: 22, pct: 44 }, rescue_teams: { count: 8, pct: 44 }, ambulances: { count: 10, pct: 42 }, medical: { count: 2200, pct: 44 }, food: { count: 5400, pct: 45 }, water: { count: 4500, pct: 45 }, shelters: { count: 180, pct: 45 } }, latitude: 16.518, longitude: 80.612 }
             ];
             const defaultTeams = [
-                { team_id: 'NDRF-AP-10', name: '10th NDRF Battalion Water Rescue Wing', organization: 'National Disaster Response Force (NDRF)', team_type: 'Flood Rescue & Swift-Water Extraction', base_location: 'Bhavanipuram Sector Base, Vijayawada', latitude: 16.5210, longitude: 80.6050, phone: '+91-866-2410101 (Emergency 1077)', capabilities: 'Deep-water boat extraction, night navigation, swift-water dive gear', acknowledgement_status: 'STANDBY' },
-                { team_id: 'SDRF-BOAT-02', name: 'State Disaster Response Force Marine Squad 2', organization: 'Andhra Pradesh SDRF', team_type: 'Rapid Inflatable Boat Evacuation', base_location: 'Prakasam Barrage North Depot', latitude: 16.5085, longitude: 80.6130, phone: '+91-866-2580202 (Control 1070)', capabilities: 'Rigid inflatable boats (RIB), life-jackets, elderly & pediatric evacuation carriers', acknowledgement_status: 'STANDBY' },
-                { team_id: 'EMS-TRIAGE-04', name: 'Mobile Emergency Medical & Critical Trauma Squad', organization: 'Department of Health & Emergency Medical Services', team_type: 'Field Trauma Triage & Critical Ambulance', base_location: 'Government General Hospital Sector Hub', latitude: 16.5050, longitude: 80.6380, phone: '+91-866-2610404 (Emergency 108)', capabilities: 'Advanced life support ambulances, portable oxygen concentrators, field IV stabilization', acknowledgement_status: 'STANDBY' }
+                { team_id: 'NDRF-AP-10', name: '10th NDRF Battalion Water Rescue Wing', organization: 'National Disaster Response Force (NDRF)', team_type: 'Flood Rescue & Swift-Water Extraction', base_location: 'Bhavanipuram Sector Base, Vijayawada', latitude: 16.5210, longitude: 80.6050, phone: '+91-866-2410101 (Emergency 1077)', capabilities: 'Deep-water boat extraction, night navigation', acknowledgement_status: 'STANDBY' }
             ];
 
             initLeafletMap(16.5062, 80.6480, defaultZones, defaultTeams);

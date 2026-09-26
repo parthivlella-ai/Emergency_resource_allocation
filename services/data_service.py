@@ -8,12 +8,19 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+_WEATHER_CACHE = {}
+_ELEV_CACHE = {}
+
 class WeatherProvider:
     """Retrieves live meteorological data from Open-Meteo or calibrated hydrological provider."""
     def get_weather_data(self, lat, lon):
+        cache_key = (round(lat, 2), round(lon, 2))
+        if cache_key in _WEATHER_CACHE:
+            return _WEATHER_CACHE[cache_key]
+
         try:
-            url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,relative_humidity_2m,precipitation,rain,wind_speed_10m&hourly=precipitation_probability&forecast_days=1"
-            res = requests.get(url, timeout=3)
+            url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,relative_humidity_2m,precipitation,rain,wind_speed_10m&forecast_days=1"
+            res = requests.get(url, timeout=1.5)
             if res.status_code == 200:
                 data = res.json()
                 current = data.get("current", {})
@@ -22,7 +29,7 @@ class WeatherProvider:
                 humidity = current.get("relative_humidity_2m", 75.0)
                 wind = current.get("wind_speed_10m", 0.0)
                 logger.info(f"Open-Meteo live weather fetched: precip={precip}mm, temp={temp}C, wind={wind}km/h")
-                return {
+                result = {
                     "provider": "Open-Meteo Global Weather API",
                     "is_live": True,
                     "confidence": "HIGH - LIVE SATELLITE/STATION TELEMETRY",
@@ -32,11 +39,12 @@ class WeatherProvider:
                     "wind_speed_kmh": wind,
                     "severity_index": min(15.0, max(4.0, precip * 1.5 + 5.0))
                 }
+                _WEATHER_CACHE[cache_key] = result
+                return result
         except Exception as e:
-            logger.info(f"External weather API unavailable: {e}. Using calibrated hydrological meteorological model.")
+            logger.info(f"External weather API notice: {e}. Using calibrated hydrological meteorological model.")
 
-        # Calibrated hydrological model values for disaster simulation
-        return {
+        result = {
             "provider": "Regional Hydrometeorological Station (Calibrated Model)",
             "is_live": False,
             "confidence": "CALIBRATED METEOROLOGICAL ESTIMATE",
@@ -46,28 +54,38 @@ class WeatherProvider:
             "wind_speed_kmh": 42.0,
             "severity_index": 12.0
         }
+        _WEATHER_CACHE[cache_key] = result
+        return result
 
 class TopographyProvider:
     """Retrieves digital elevation and slope metrics from Open-Meteo Elevation API or terrain model."""
     def get_elevation_data(self, lat, lon):
+        cache_key = (round(lat, 2), round(lon, 2))
+        if cache_key in _ELEV_CACHE:
+            return _ELEV_CACHE[cache_key]
+
         try:
             url = f"https://api.open-meteo.com/v1/elevation?latitude={lat}&longitude={lon}"
-            res = requests.get(url, timeout=3)
+            res = requests.get(url, timeout=1.5)
             if res.status_code == 200:
                 elev = res.json().get("elevation", [25.0])[0]
-                return {
+                result = {
                     "provider": "Open-Meteo Digital Elevation Model (SRTM 90m)",
                     "elevation_m": elev,
                     "confidence": "VERIFIED GEOSPATIAL ELEVATION"
                 }
+                _ELEV_CACHE[cache_key] = result
+                return result
         except Exception:
             pass
 
-        return {
+        result = {
             "provider": "Regional Topographic Survey (DEM Model)",
             "elevation_m": 18.5,
             "confidence": "DIGITAL TERRAIN ESTIMATE"
         }
+        _ELEV_CACHE[cache_key] = result
+        return result
 
 class GeographyProvider:
     """Analyzes terrain, siltation, and geotechnical factors."""

@@ -1428,9 +1428,20 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
 
     <!-- Client-side Interactive Logic & Map Scripts -->
     <script>
-        // Support Vercel frontend calling Render backend or same-origin
-        const DEFAULT_RENDER_URL = 'https://emergency-resource-allocation.onrender.com';
-        const API_BASE = window.RENDER_BACKEND_URL || localStorage.getItem('RENDER_API_URL') || (window.location.hostname.includes('vercel.app') ? DEFAULT_RENDER_URL : '');
+        // Universal Backend Connection Management (Supports Render, Vercel proxy, Localhost)
+        const RENDER_BACKEND_URL = 'https://emergency-resource-allocation.onrender.com';
+
+        // Auto-sanitize legacy or invalid stored URLs
+        let storedBackend = localStorage.getItem('RENDER_API_URL');
+        if (storedBackend && (!storedBackend.startsWith('http') || storedBackend.includes('emergency-resource-backend'))) {
+            localStorage.removeItem('RENDER_API_URL');
+            storedBackend = null;
+        }
+
+        const API_BASE = window.RENDER_BACKEND_URL || 
+                         storedBackend || 
+                         (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : RENDER_BACKEND_URL);
+
         window.currentIncidentId = {{ initial_incident.id if initial_incident else 1 }};
         window.leafletMap = null;
         window.mapMarkers = [];
@@ -1446,7 +1457,7 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
                 } catch(e) {
                     lbl.innerText = 'Render Linked';
                 }
-            } else if (window.location.hostname.includes('vercel.app')) {
+            } else if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
                 lbl.innerText = 'Render Linked';
             } else {
                 lbl.innerText = 'Connected';
@@ -1454,23 +1465,78 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
         }
 
         function openBackendConfig() {
-            const current = localStorage.getItem('RENDER_API_URL') || '';
+            const current = localStorage.getItem('RENDER_API_URL') || RENDER_BACKEND_URL;
             const newUrl = prompt(
-                'Enter your deployed Render Backend URL:\nExample: https://emergency-resource-backend.onrender.com\n(Leave empty to use same-origin / relative proxy)',
+                'Connected to Render Backend:\n' + RENDER_BACKEND_URL + '\n\nTo change or use a different backend URL, enter it below:',
                 current
             );
             if (newUrl !== null) {
                 const clean = newUrl.trim().replace(/\/$/, '');
-                if (clean) {
+                if (clean && clean !== RENDER_BACKEND_URL) {
                     localStorage.setItem('RENDER_API_URL', clean);
-                    showToast(`Backend connected to: ${clean}`, '🔗');
+                    showToast(`Backend set to: ${clean}`, '🔗');
                 } else {
                     localStorage.removeItem('RENDER_API_URL');
-                    showToast('Backend set to same-origin / proxy.', '🔗');
+                    showToast('Backend set to default Render URL.', '🔗');
                 }
                 updateBackendLabel();
                 setTimeout(() => location.reload(), 600);
             }
+        }
+
+        async function apiPost(endpoint, payload) {
+            const targets = [];
+            // Target 1: Configured API_BASE
+            if (API_BASE && API_BASE !== '') {
+                targets.push(`${API_BASE}${endpoint}`);
+            }
+            // Target 2: Explicit live Render backend
+            if (!targets.includes(`${RENDER_BACKEND_URL}${endpoint}`)) {
+                targets.push(`${RENDER_BACKEND_URL}${endpoint}`);
+            }
+            // Target 3: Relative path fallback
+            if (!targets.includes(endpoint)) {
+                targets.push(endpoint);
+            }
+
+            let lastError = null;
+            for (const url of targets) {
+                try {
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) {
+                        return await res.json();
+                    }
+                    const errData = await res.json().catch(() => ({}));
+                    if (errData.error) throw new Error(errData.error);
+                } catch (e) {
+                    lastError = e;
+                    console.warn(`POST ${url} failed, trying next target:`, e);
+                }
+            }
+            throw lastError || new Error('Network connection to backend failed.');
+        }
+
+        async function apiGet(endpoint) {
+            const targets = [];
+            if (API_BASE && API_BASE !== '') targets.push(`${API_BASE}${endpoint}`);
+            if (!targets.includes(`${RENDER_BACKEND_URL}${endpoint}`)) targets.push(`${RENDER_BACKEND_URL}${endpoint}`);
+            if (!targets.includes(endpoint)) targets.push(endpoint);
+
+            for (const url of targets) {
+                try {
+                    const res = await fetch(url);
+                    if (res.ok) {
+                        return await res.json();
+                    }
+                } catch (e) {
+                    console.warn(`GET ${url} failed:`, e);
+                }
+            }
+            return null;
         }
 
         function showToast(message, icon = '⚡') {
@@ -1603,13 +1669,8 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
 
             try {
                 showToast(`Harvesting telemetry for ${payload.location}...`, '🌐');
-                const res = await fetch(`${API_BASE}/api/incident/analyze`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const data = await res.json();
-                if (data.success) {
+                const data = await apiPost('/api/incident/analyze', payload);
+                if (data && data.success) {
                     window.currentIncidentId = data.incident.id;
 
                     updateIncidentDashboard(data);
@@ -1623,11 +1684,11 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
                         appBtn.innerHTML = '<span>✅ AUTHORIZE & DISPATCH RESPONSE</span>';
                     }
                 } else {
-                    showToast(data.error || 'Failed to analyze incident.', '❌');
+                    showToast(data?.error || 'Failed to analyze incident.', '❌');
                 }
             } catch (err) {
                 console.error(err);
-                showToast('Network error during analysis.', '❌');
+                showToast(err.message || 'Network error during analysis.', '❌');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<span>⚡ ANALYZE & RESPOND</span>';
@@ -1830,13 +1891,11 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
             btn.innerHTML = '<span>⏳ Transmitting Authorized Directives...</span>';
 
             try {
-                const res = await fetch(`${API_BASE}/api/incident/${window.currentIncidentId}/approve`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ officer_name: 'Command Duty Officer', badge_number: 'AUTHORIZED' })
+                const result = await apiPost(`/api/incident/${window.currentIncidentId}/approve`, {
+                    officer_name: 'Command Duty Officer',
+                    badge_number: 'AUTHORIZED'
                 });
-                const result = await res.json();
-                if (result.success) {
+                if (result && result.success) {
                     btn.style.background = '#059669';
                     btn.innerHTML = `<span>✓ DISPATCH AUTHORIZED</span>`;
                     showToast('Emergency dispatch directives transmitted to regional units!', '📡');
@@ -1872,7 +1931,7 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
                 } else {
                     btn.disabled = false;
                     btn.innerHTML = '<span>✅ AUTHORIZE & DISPATCH RESPONSE</span>';
-                    showToast(result.error || 'Dispatch authorization failed.', '❌');
+                    showToast(result?.error || 'Dispatch authorization failed.', '❌');
                 }
             } catch (err) {
                 console.error(err);
@@ -1885,13 +1944,10 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
         // Handle Interactive Field Squad Acknowledgement
         async function handleTeamAck(teamId, action) {
             try {
-                const res = await fetch(`${API_BASE}/api/incident/${window.currentIncidentId}/team/${teamId}/respond`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: action })
+                const result = await apiPost(`/api/incident/${window.currentIncidentId}/team/${teamId}/respond`, {
+                    action: action
                 });
-                const result = await res.json();
-                if (result.success) {
+                if (result && result.success) {
                     const badge = document.getElementById(`team-badge-${teamId}`);
                     if (badge) {
                         badge.className = `team-ack-badge ack-${action.toLowerCase()}`;
@@ -1912,13 +1968,11 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
         async function handleTriggerEscalation() {
             showToast('Simulating upstream cloudburst surge & reservoir release...', '🌧️');
             try {
-                const res = await fetch(`${API_BASE}/api/incident/${window.currentIncidentId}/escalate`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ rainfall_surge_mm: 55.0, dam_release: true })
+                const result = await apiPost(`/api/incident/${window.currentIncidentId}/escalate`, {
+                    rainfall_surge_mm: 55.0,
+                    dam_release: true
                 });
-                const result = await res.json();
-                if (result.success && result.escalation) {
+                if (result && result.success && result.escalation) {
                     const esc = result.escalation;
                     showToast(esc.headline, '⚠️');
 
