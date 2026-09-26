@@ -1,9 +1,11 @@
 {
   "version": 2,
+  "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/api/:match*",
-      "destination": "https://emergency-resource-allocation.onrender.com/api/:match*"
+      "source": "/api/(.*)",
+      "destination": "https://emergency-resource-allocation.onrender.com/api/$1"
     }
   ]
 }
