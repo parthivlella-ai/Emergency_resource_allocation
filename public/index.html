@@ -981,18 +981,15 @@
                 </div>
             </a>
             <div class="nav-actions">
-                <div class="operational-badge">
+                <div class="operational-badge" style="background: rgba(16, 185, 129, 0.12); color: #34d399; border-color: rgba(16, 185, 129, 0.35);">
                     <span>●</span>
-                    <span>Command Center Active</span>
+                    <span>Live Cloud Connected</span>
                 </div>
                 <button class="nav-btn" onclick="scrollToSection('intake-card')">
                     <span>📍 New Incident</span>
                 </button>
                 <button class="nav-btn" onclick="scrollToSection('teams-section')">
                     <span>👥 Regional Squads</span>
-                </button>
-                <button class="nav-btn" onclick="openBackendConfig()" id="backend-status-btn" style="border-color: rgba(59, 130, 246, 0.4); color: #93c5fd;" title="Configure Render Backend API URL for cross-origin deployment">
-                    <span>🔗 <span id="backend-label">Backend Linked</span></span>
                 </button>
             </div>
         </div>
@@ -1379,74 +1376,23 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
 
     <!-- Client-side Interactive Logic & Map Scripts -->
     <script>
-        // Universal Backend Connection Management (Supports Render, Vercel proxy, Localhost)
+        // Automated Cloud Backend Connection (Directly communicates with Render backend)
         const RENDER_BACKEND_URL = 'https://emergency-resource-allocation.onrender.com';
-
-        // Auto-sanitize legacy or invalid stored URLs
-        let storedBackend = localStorage.getItem('RENDER_API_URL');
-        if (storedBackend && (!storedBackend.startsWith('http') || storedBackend.includes('emergency-resource-backend'))) {
-            localStorage.removeItem('RENDER_API_URL');
-            storedBackend = null;
-        }
-
-        const API_BASE = window.RENDER_BACKEND_URL || 
-                         storedBackend || 
-                         (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : RENDER_BACKEND_URL);
+        const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? ''
+            : RENDER_BACKEND_URL;
 
         window.currentIncidentId = 1;
         window.leafletMap = null;
         window.mapMarkers = [];
 
-        function updateBackendLabel() {
-            const lbl = document.getElementById('backend-label');
-            if (!lbl) return;
-            const custom = localStorage.getItem('RENDER_API_URL');
-            if (custom) {
-                try {
-                    const host = new URL(custom).hostname;
-                    lbl.innerText = host.replace('.onrender.com', '').substring(0, 16);
-                } catch(e) {
-                    lbl.innerText = 'Render Linked';
-                }
-            } else if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-                lbl.innerText = 'Render Linked';
-            } else {
-                lbl.innerText = 'Connected';
-            }
-        }
-
-        function openBackendConfig() {
-            const current = localStorage.getItem('RENDER_API_URL') || RENDER_BACKEND_URL;
-            const newUrl = prompt(
-                'Connected to Render Backend:\n' + RENDER_BACKEND_URL + '\n\nTo change or use a different backend URL, enter it below:',
-                current
-            );
-            if (newUrl !== null) {
-                const clean = newUrl.trim().replace(/\/$/, '');
-                if (clean && clean !== RENDER_BACKEND_URL) {
-                    localStorage.setItem('RENDER_API_URL', clean);
-                    showToast(`Backend set to: ${clean}`, '🔗');
-                } else {
-                    localStorage.removeItem('RENDER_API_URL');
-                    showToast('Backend set to default Render URL.', '🔗');
-                }
-                updateBackendLabel();
-                setTimeout(() => location.reload(), 600);
-            }
-        }
-
         async function apiPost(endpoint, payload) {
             const targets = [];
-            // Target 1: Configured API_BASE
-            if (API_BASE && API_BASE !== '') {
-                targets.push(`${API_BASE}${endpoint}`);
-            }
-            // Target 2: Explicit live Render backend
-            if (!targets.includes(`${RENDER_BACKEND_URL}${endpoint}`)) {
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                targets.push(endpoint);
                 targets.push(`${RENDER_BACKEND_URL}${endpoint}`);
-            }
-            // Target 3: Relative path fallback
-            if (!targets.includes(endpoint)) {
+            } else {
+                targets.push(`${RENDER_BACKEND_URL}${endpoint}`);
                 targets.push(endpoint);
             }
 
@@ -1465,7 +1411,7 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
                     if (errData.error) throw new Error(errData.error);
                 } catch (e) {
                     lastError = e;
-                    console.warn(`POST ${url} failed, trying next target:`, e);
+                    console.warn(`POST ${url} failed, trying fallback:`, e);
                 }
             }
             throw lastError || new Error('Network connection to backend failed.');
@@ -1473,9 +1419,13 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
 
         async function apiGet(endpoint) {
             const targets = [];
-            if (API_BASE && API_BASE !== '') targets.push(`${API_BASE}${endpoint}`);
-            if (!targets.includes(`${RENDER_BACKEND_URL}${endpoint}`)) targets.push(`${RENDER_BACKEND_URL}${endpoint}`);
-            if (!targets.includes(endpoint)) targets.push(endpoint);
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                targets.push(endpoint);
+                targets.push(`${RENDER_BACKEND_URL}${endpoint}`);
+            } else {
+                targets.push(`${RENDER_BACKEND_URL}${endpoint}`);
+                targets.push(endpoint);
+            }
 
             for (const url of targets) {
                 try {
@@ -1958,8 +1908,6 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
 
         // Initialize Map and load live baseline on page load
         window.addEventListener('DOMContentLoaded', async () => {
-            updateBackendLabel();
-            
             // Connect to Live Command Center
             try {
                 const data = await apiGet('/api/incident/baseline');
