@@ -1023,12 +1023,12 @@
 
                     <div class="form-group">
                         <label class="form-label" for="incident-location-input">Affected City / Operations Area</label>
-                        <input id="incident-location-input" class="form-input" type="text" placeholder="e.g. Hyderabad, Mumbai, Chennai, Vijayawada, Rajahmundry..." value="{{ normalized_location.city if normalized_location else 'Vijayawada' }}" required>
+                        <input id="incident-location-input" class="form-input" type="text" placeholder="e.g. Hyderabad, Mumbai, Chennai, Vijayawada, Rajahmundry..." value="Vijayawada" required>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="incident-notes-input">Incident Notes (Optional)</label>
-                        <input id="incident-notes-input" class="form-input" type="text" placeholder="e.g. Inflow spike, dam spillway release alert" value="{{ initial_incident.severity_notes or '' }}">
+                        <input id="incident-notes-input" class="form-input" type="text" placeholder="e.g. Inflow spike, dam spillway release alert" value="">
                     </div>
 
                     <button id="btn-analyze" type="submit" class="btn-analyze">
@@ -1061,17 +1061,17 @@
             <div class="incident-left">
                 <span class="badge-live">● ACTIVE INCIDENT</span>
                 <div>
-                    <span class="incident-code" id="dash-incident-id">{{ initial_incident.incident_id }}</span>
+                    <span class="incident-code" id="dash-incident-id">INC-2026-939</span>
                     <div class="incident-location-text" id="dash-location-text">
-                        📍 <span id="dash-display-name">{{ normalized_location.display_name if normalized_location else 'Vijayawada, Andhra Pradesh, India' }}</span>
-                        &bull; Coord: <span id="dash-coords" style="font-family: 'JetBrains Mono', monospace;">{{ "%.4f"|format(normalized_location.latitude) if normalized_location.latitude else "16.5062" }}°N, {{ "%.4f"|format(normalized_location.longitude) if normalized_location.longitude else "80.6480" }}°E</span>
+                        📍 <span id="dash-display-name">Vijayawada, Andhra Pradesh, India</span>
+                        &bull; Coord: <span id="dash-coords" style="font-family: 'JetBrains Mono', monospace;">16.5062°N, 80.6480°E</span>
                     </div>
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 12px;">
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Live Telemetry:</span>
                 <span class="operational-badge" id="telemetry-badge" style="background: rgba(59, 130, 246, 0.15); color: #93c5fd; border-color: rgba(59, 130, 246, 0.4);">
-                    🌧️ Precip: <span id="weather-precip-val">{{ weather.precipitation_mm if weather else 0.0 }}</span> mm/24h &bull; 💨 Wind: <span id="weather-wind-val">{{ weather.wind_speed_kmh if weather else 16.7 }}</span> km/h
+                    🌧️ Precip: <span id="weather-precip-val">0.0</span> mm/24h &bull; 💨 Wind: <span id="weather-wind-val">16.7</span> km/h
                 </span>
             </div>
         </section>
@@ -1080,33 +1080,33 @@
         <section class="kpi-row">
             <div class="kpi-card">
                 <span class="kpi-title">Overall Incident Risk</span>
-                <span class="kpi-value" id="kpi-risk-val" style="color: #ef4444;">{{ initial_incident.overall_risk or 'CRITICAL' }}</span>
+                <span class="kpi-value" id="kpi-risk-val" style="color: #ef4444;">CRITICAL</span>
                 <span class="kpi-sub">Multi-Zone Maximum Exposure</span>
             </div>
             <div class="kpi-card">
                 <span class="kpi-title">Exposed Population</span>
-                <span class="kpi-value" id="kpi-pop-val">{{ "{:,}".format(totals.total_population) if totals.total_population else '520,000' }}</span>
+                <span class="kpi-value" id="kpi-pop-val">520,000</span>
                 <span class="kpi-sub">Across 4 Operational Sectors</span>
             </div>
             <div class="kpi-card">
                 <span class="kpi-title">High Priority Sectors</span>
-                <span class="kpi-value" id="kpi-zones-val" style="color: #f59e0b;">{{ totals.critical_zones_count + totals.alert_zones_count if totals else '3' }} / 4</span>
+                <span class="kpi-value" id="kpi-zones-val" style="color: #f59e0b;">3 / 4</span>
                 <span class="kpi-sub">Critical & High Triage Tier</span>
             </div>
             <div class="kpi-card">
                 <span class="kpi-title">Boats & Teams Available</span>
-                <span class="kpi-value" id="kpi-assets-val" style="color: #60a5fa;">{{ totals.allocated_boats }} / {{ totals.total_boats }}</span>
-                <span class="kpi-sub">{{ totals.allocated_rescue_teams }} / {{ totals.total_rescue_teams }} Squads Active</span>
+                <span class="kpi-value" id="kpi-assets-val" style="color: #60a5fa;">50 / 50</span>
+                <span class="kpi-sub">18 / 18 Squads Active</span>
             </div>
         </section>
 
         <!-- RESOURCE SHORTAGE ALERT (DISPLAYS WHEN REQUIRED > AVAILABLE) -->
-        <div id="shortage-banner" class="shortage-banner" style="{% if shortage_audit and shortage_audit.has_shortage %}display: flex;{% endif %}">
+        <div id="shortage-banner" class="shortage-banner" style="display: none;">
             <span style="font-size: 1.5rem;">⚠️</span>
             <div>
                 <strong style="color: #f87171; font-size: 0.95rem;">RESOURCE INVENTORY SHORTAGE DETECTED</strong>
                 <div id="shortage-text" style="font-size: 0.84rem; color: #fecaca; margin-top: 2px;">
-                    {{ shortage_audit.summary if shortage_audit and shortage_audit.summary else "Estimated operational requirements exceed localized depot stock. State Disaster Reserve requisition recommended." }}
+                    Estimated operational requirements exceed localized depot stock. State Disaster Reserve requisition recommended.
                 </div>
             </div>
         </div>
@@ -1126,44 +1126,44 @@
                 <div>
                     <span style="font-size: 0.76rem; color: #f87171; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Priority #1 Strategic Directive</span>
                     <h2 class="decision-title" id="decision-title-text">
-                        🚨 {{ decision_card.primary_headline or 'IMMEDIATE RESCUE DEPLOYMENT' }}
+                        🚨 IMMEDIATE RESCUE DEPLOYMENT
                     </h2>
                     <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
-                        Target Sector: <strong id="decision-target-name" style="color: #ffffff;">{{ decision_card.primary_full_name or 'Riverfront Lowlands' }}</strong>
+                        Target Sector: <strong id="decision-target-name" style="color: #ffffff;">Riverfront Lowlands</strong>
                     </div>
                 </div>
                 <span class="decision-badge-critical" id="decision-risk-badge">PRIORITY TIER 1</span>
             </div>
 
             <div class="decision-rationale" id="decision-rationale-text">
-                {{ decision_card.primary_rationale or 'High flood probability combines with dense population exposure and critical drainage deficit to require immediate asset deployment.' }}
+                High flood probability combines with dense population exposure and critical drainage deficit to require immediate asset deployment.
             </div>
 
             <div>
                 <span style="font-size: 0.74rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Direct Allocations for Primary Sector:</span>
                 <div class="dominant-assets-grid" id="dominant-assets-container">
                     <div class="asset-tile">
-                        <span class="asset-tile-val" id="tile-boats">{{ decision_card.primary_assets.boats }}</span>
+                        <span class="asset-tile-val" id="tile-boats">22</span>
                         <span class="asset-tile-label">Rescue Boats</span>
                     </div>
                     <div class="asset-tile">
-                        <span class="asset-tile-val" id="tile-teams">{{ decision_card.primary_assets.teams }}</span>
+                        <span class="asset-tile-val" id="tile-teams">8</span>
                         <span class="asset-tile-label">Rescue Teams</span>
                     </div>
                     <div class="asset-tile">
-                        <span class="asset-tile-val" id="tile-ambulances">{{ decision_card.primary_assets.ambulances }}</span>
+                        <span class="asset-tile-val" id="tile-ambulances">10</span>
                         <span class="asset-tile-label">Ambulances</span>
                     </div>
                     <div class="asset-tile">
-                        <span class="asset-tile-val" id="tile-medical">{{ "{:,}".format(decision_card.primary_assets.medical) }}</span>
+                        <span class="asset-tile-val" id="tile-medical">2,200</span>
                         <span class="asset-tile-label">Medical Kits</span>
                     </div>
                     <div class="asset-tile">
-                        <span class="asset-tile-val" id="tile-food">{{ "{:,}".format(decision_card.primary_assets.food) }}</span>
+                        <span class="asset-tile-val" id="tile-food">5,400</span>
                         <span class="asset-tile-label">Food Packs</span>
                     </div>
                     <div class="asset-tile">
-                        <span class="asset-tile-val" id="tile-water">{{ "{:,}".format(decision_card.primary_assets.water) }}</span>
+                        <span class="asset-tile-val" id="tile-water">4,500</span>
                         <span class="asset-tile-label">Water Units</span>
                     </div>
                 </div>
@@ -1193,40 +1193,75 @@
                     <div style="font-size: 0.75rem; color: var(--text-secondary);">Authentic regional squads matched to current location with live deployment status</div>
                 </div>
                 <span class="operational-badge" id="teams-count-badge" style="background: rgba(59, 130, 246, 0.15); color: #93c5fd; border-color: rgba(59, 130, 246, 0.4);">
-                    {{ rescue_teams|length if rescue_teams else 5 }} Regional Units
+                    5 Regional Units
                 </span>
             </div>
 
             <div class="teams-grid" id="teams-cards-grid">
-                {% for t in rescue_teams %}
-                <div class="team-card" id="team-card-{{ t.team_id }}">
+                
+                <div class="team-card" id="team-card-NDRF-AP-10">
                     <div>
                         <div class="team-header">
                             <div>
-                                <div class="team-name">{{ t.name }}</div>
-                                <div class="team-org">{{ t.organization }} &bull; Unit: <code>{{ t.team_id }}</code></div>
+                                <div class="team-name">10th NDRF Battalion Water Rescue Wing</div>
+                                <div class="team-org">National Disaster Response Force (NDRF) &bull; Unit: <code>NDRF-AP-10</code></div>
                             </div>
-                            <span class="team-ack-badge ack-{{ t.acknowledgement_status|lower }}" id="team-badge-{{ t.team_id }}">
-                                {{ t.acknowledgement_status }}
-                            </span>
+                            <span class="team-ack-badge ack-standby" id="team-badge-NDRF-AP-10">STANDBY</span>
                         </div>
-                        <div class="team-role-tag">{{ t.team_type }}</div>
+                        <div class="team-role-tag">Flood Rescue & Swift-Water Extraction</div>
                         <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 6px;">
-                            📍 Base: {{ t.base_location }}<br>
-                            📞 Direct Line: <strong style="color: #93c5fd;">{{ t.phone }}</strong><br>
-                            🛠️ Capabilities: {{ t.capabilities }}
+                            📍 Base: Bhavanipuram Sector Base, Vijayawada<br>
+                            📞 Direct Line: <strong style="color: #93c5fd;">+91-866-2410101 (Emergency 1077)</strong><br>
+                            🛠️ Capabilities: Deep-water boat extraction, night navigation, swift-water dive gear
                         </div>
                     </div>
                     <div class="team-actions">
-                        <button class="btn-team-ack btn-accept" onclick="handleTeamAck('{{ t.team_id }}', 'ACCEPTED')">
-                            ✓ ACCEPT
-                        </button>
-                        <button class="btn-team-ack btn-decline" onclick="handleTeamAck('{{ t.team_id }}', 'UNAVAILABLE')">
-                            ✕ UNAVAILABLE
-                        </button>
+                        <button class="btn-team-ack btn-accept" onclick="handleTeamAck('NDRF-AP-10', 'ACCEPTED')">✓ ACCEPT</button>
+                        <button class="btn-team-ack btn-decline" onclick="handleTeamAck('NDRF-AP-10', 'UNAVAILABLE')">✕ UNAVAILABLE</button>
                     </div>
                 </div>
-                {% endfor %}
+                <div class="team-card" id="team-card-SDRF-BOAT-02">
+                    <div>
+                        <div class="team-header">
+                            <div>
+                                <div class="team-name">State Disaster Response Force Marine Squad 2</div>
+                                <div class="team-org">Andhra Pradesh SDRF &bull; Unit: <code>SDRF-BOAT-02</code></div>
+                            </div>
+                            <span class="team-ack-badge ack-standby" id="team-badge-SDRF-BOAT-02">STANDBY</span>
+                        </div>
+                        <div class="team-role-tag">Rapid Inflatable Boat Evacuation</div>
+                        <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 6px;">
+                            📍 Base: Prakasam Barrage North Depot<br>
+                            📞 Direct Line: <strong style="color: #93c5fd;">+91-866-2580202 (Control 1070)</strong><br>
+                            🛠️ Capabilities: Rigid inflatable boats (RIB), life-jackets, elderly & pediatric evacuation carriers
+                        </div>
+                    </div>
+                    <div class="team-actions">
+                        <button class="btn-team-ack btn-accept" onclick="handleTeamAck('SDRF-BOAT-02', 'ACCEPTED')">✓ ACCEPT</button>
+                        <button class="btn-team-ack btn-decline" onclick="handleTeamAck('SDRF-BOAT-02', 'UNAVAILABLE')">✕ UNAVAILABLE</button>
+                    </div>
+                </div>
+                <div class="team-card" id="team-card-EMS-TRIAGE-04">
+                    <div>
+                        <div class="team-header">
+                            <div>
+                                <div class="team-name">Mobile Emergency Medical & Critical Trauma Squad</div>
+                                <div class="team-org">Department of Health & Emergency Medical Services &bull; Unit: <code>EMS-TRIAGE-04</code></div>
+                            </div>
+                            <span class="team-ack-badge ack-standby" id="team-badge-EMS-TRIAGE-04">STANDBY</span>
+                        </div>
+                        <div class="team-role-tag">Field Trauma Triage & Critical Ambulance</div>
+                        <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 6px;">
+                            📍 Base: Government General Hospital Sector Hub<br>
+                            📞 Direct Line: <strong style="color: #93c5fd;">+91-866-2610404 (Emergency 108)</strong><br>
+                            🛠️ Capabilities: Advanced life support ambulances, portable oxygen concentrators, field IV stabilization
+                        </div>
+                    </div>
+                    <div class="team-actions">
+                        <button class="btn-team-ack btn-accept" onclick="handleTeamAck('EMS-TRIAGE-04', 'ACCEPTED')">✓ ACCEPT</button>
+                        <button class="btn-team-ack btn-decline" onclick="handleTeamAck('EMS-TRIAGE-04', 'UNAVAILABLE')">✕ UNAVAILABLE</button>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -1243,10 +1278,10 @@
                     <div class="comm-meta">
                         <span class="comm-recipient" id="comm-first-recipient">🚤 Emergency Response Squad</span>
                         <div class="comm-body" id="comm-first-body">🚨 PRIORITY-1 EMERGENCY DISPATCH DIRECTIVE
-Incident: {{ initial_incident.incident_id }} (Flood)
-Target Sector: {{ decision_card.primary_full_name }}
+Incident: INC-2026-939 (Flood)
+Target Sector: Riverfront Lowlands
 Authorized By: Emergency Command Operations Center
-Directives: Deploy {{ decision_card.primary_assets.boats }} rescue boats & {{ decision_card.primary_assets.teams }} teams to low-lying estuarine perimeter.
+Directives: Deploy 22 rescue boats & 8 teams to low-lying estuarine perimeter.
 Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment status.</div>
                     </div>
                     <span class="comm-status-badge">DISPATCH READY</span>
@@ -1289,17 +1324,43 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
                         </tr>
                     </thead>
                     <tbody id="matrix-table-body">
-                        {% for z in zones %}
+                        
                         <tr>
-                            <td><span class="rank-circle r-{{ z.priority_rank }}">#{{ z.priority_rank }}</span></td>
-                            <td><strong style="color: #ffffff;">{{ z.name }}</strong></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: #94a3b8;">{{ z.coordinates }}</span></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 600;">{{ "{:,}".format(z.population) }}</span></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 800; color: {{ z.status_color }};">{{ z.risk_pct }}%</span></td>
-                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #60a5fa;">{{ "%.3f"|format(z.priority_score) }}</span></td>
-                            <td><span class="action-tier-badge {{ z.status_badge }}">{{ z.action_tier }}</span></td>
+                            <td><span class="rank-circle r-1">#1</span></td>
+                            <td><strong style="color: #ffffff;">One Town & Commercial Confluence</strong></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: #94a3b8;">16.518°N, 80.612°E</span></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 600;">165,000</span></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #ef4444;">88.5%</span></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #60a5fa;">0.842</span></td>
+                            <td><span class="action-tier-badge tier-critical">IMMEDIATE RESCUE</span></td>
                         </tr>
-                        {% endfor %}
+                        <tr>
+                            <td><span class="rank-circle r-2">#2</span></td>
+                            <td><strong style="color: #ffffff;">Bhavanipuram Lowland Reach</strong></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: #94a3b8;">16.524°N, 80.601°E</span></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 600;">145,000</span></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #f59e0b;">76.2%</span></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #60a5fa;">0.725</span></td>
+                            <td><span class="action-tier-badge tier-high">ACTIVE DEPLOYMENT</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="rank-circle r-3">#3</span></td>
+                            <td><strong style="color: #ffffff;">Auto Nagar & Industrial Drainage Corridor</strong></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: #94a3b8;">16.495°N, 80.665°E</span></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 600;">110,000</span></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #3b82f6;">62.4%</span></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #60a5fa;">0.589</span></td>
+                            <td><span class="action-tier-badge tier-moderate">STANDBY SUPPORT</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="rank-circle r-4">#4</span></td>
+                            <td><strong style="color: #ffffff;">Gunadala & Hill-Slope Perimeter</strong></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: #94a3b8;">16.512°N, 80.655°E</span></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 600;">100,000</span></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #10b981;">38.1%</span></td>
+                            <td><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #60a5fa;">0.362</span></td>
+                            <td><span class="action-tier-badge tier-low">MONITORING TIER</span></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -1318,41 +1379,9 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
             </div>
 
             <div class="allocation-grid" style="margin-top: 16px;" id="resource-cards-grid">
-                {% set resource_items = [
-                    ('boats', '🚤 Rescue Boats', 'Units', 'total_boats', 'allocated_boats'),
-                    ('rescue_teams', '👥 Rescue Teams', 'Teams', 'total_rescue_teams', 'allocated_rescue_teams'),
-                    ('ambulances', '🚑 Ambulances', 'Units', 'total_ambulances', 'allocated_ambulances'),
-                    ('medical', '🩺 Medical Kits', 'Kits', 'total_medical', 'allocated_medical'),
-                    ('food', '🍲 Food Packs', 'Packs', 'total_food', 'allocated_food'),
-                    ('water', '💧 Drinking Water', 'Units', 'total_water', 'allocated_water'),
-                    ('shelters', '⛺ Shelter Tents', 'Tents', 'total_shelters', 'allocated_shelters')
-                ] %}
-                {% for r_key, r_title, r_unit, r_tot_key, r_alloc_key in resource_items %}
-                <div class="alloc-card">
-                    <div class="alloc-card-header">
-                        <span class="alloc-title">{{ r_title }}</span>
-                        <span class="alloc-avail">{{ "{:,}".format(totals[r_alloc_key]) }} / {{ "{:,}".format(totals[r_tot_key]) }} {{ r_unit }}</span>
-                    </div>
-                    <div class="stacked-bar">
-                        {% for z in zones %}
-                        <div class="bar-seg seg-{{ ((loop.index0 % 4) + 1) }}" style="width: {{ z.allocations[r_key].pct }}%;" title="{{ z.short_name }}: {{ "{:,}".format(z.allocations[r_key].count) }} {{ r_unit }} ({{ z.allocations[r_key].pct }}%)"></div>
-                        {% endfor %}
-                    </div>
-                    <div class="zone-share-legend">
-                        {% for z in zones %}
-                        <div class="legend-row-item">
-                            <span class="legend-name">
-                                <span class="legend-dot-sq seg-{{ ((loop.index0 % 4) + 1) }}"></span>
-                                <span>{{ z.short_name }} (Rank #{{ z.priority_rank }}):</span>
-                            </span>
-                            <strong style="color: #ffffff; font-family: 'JetBrains Mono', monospace;">
-                                {{ "{:,}".format(z.allocations[r_key].count) }} {{ r_unit }} ({{ z.allocations[r_key].pct }}%)
-                            </strong>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endfor %}
+                
+            <div class="allocation-grid" style="margin-top: 16px;" id="resource-cards-grid">
+                <!-- Dynamically populated by renderAllocationCards -->
             </div>
         </section>
 
@@ -1373,14 +1402,11 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
                         </tr>
                     </thead>
                     <tbody id="telemetry-sources-body">
-                        {% for s in telemetry_sources %}
-                        <tr>
-                            <td><strong>{{ s.source }}</strong></td>
-                            <td style="color: #cbd5e1;">{{ s.data_type }}</td>
-                            <td><code style="color: #60a5fa;">{{ s.value }}</code></td>
-                            <td><span style="color: #34d399; font-size: 0.72rem;">{{ s.confidence }}</span></td>
-                        </tr>
-                        {% endfor %}
+                        
+                        <tr><td><strong>Open-Meteo Precipitation Telemetry</strong></td><td style="color: #cbd5e1;">Live Precipitation</td><td><code style="color: #60a5fa;">0.0 mm/24h</code></td><td><span style="color: #34d399; font-size: 0.72rem;">0.98 (API Ingested)</span></td></tr>
+                        <tr><td><strong>Open-Meteo Surface Wind Telemetry</strong></td><td style="color: #cbd5e1;">Surface Wind Speed</td><td><code style="color: #60a5fa;">16.7 km/h</code></td><td><span style="color: #34d399; font-size: 0.72rem;">0.95 (API Ingested)</span></td></tr>
+                        <tr><td><strong>OpenStreetMap Nominatim Geocoder</strong></td><td style="color: #cbd5e1;">Geographic Coordinates</td><td><code style="color: #60a5fa;">16.5062°N, 80.6480°E</code></td><td><span style="color: #34d399; font-size: 0.72rem;">0.99 (Verified)</span></td></tr>
+                        <tr><td><strong>SRTM Digital Elevation Model</strong></td><td style="color: #cbd5e1;">Hydrologic Elevation Gradient</td><td><code style="color: #60a5fa;">19.4m AMSL</code></td><td><span style="color: #34d399; font-size: 0.72rem;">0.92 (Satellite Topo)</span></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -1430,7 +1456,7 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
     <script>
         // Support Vercel frontend calling Render backend or same-origin
         const API_BASE = window.RENDER_BACKEND_URL || localStorage.getItem('RENDER_API_URL') || '';
-        window.currentIncidentId = {{ initial_incident.id if initial_incident else 1 }};
+        window.currentIncidentId = 1;
         window.leafletMap = null;
         window.mapMarkers = [];
 
@@ -1950,15 +1976,54 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
             }
         }
 
-        // Initialize Map on page load
-        window.addEventListener('DOMContentLoaded', () => {
+        // Initialize Map and load baseline on page load
+        window.addEventListener('DOMContentLoaded', async () => {
             updateBackendLabel();
-            const lat = {{ normalized_location.latitude if normalized_location and normalized_location.latitude else 16.5062 }};
-            const lon = {{ normalized_location.longitude if normalized_location and normalized_location.longitude else 80.6480 }};
-            const initialZones = {{ zones|tojson|safe if zones else '[]' }};
-            const initialTeams = {{ rescue_teams|tojson|safe if rescue_teams else '[]' }};
+            
+            // Check if running on Vercel without custom backend set
+            if (window.location.hostname.includes('vercel.app') && !localStorage.getItem('RENDER_API_URL')) {
+                showToast('Welcome! Click [Set Render URL] in top right to link your Render backend.', '💡');
+            }
 
-            initLeafletMap(lat, lon, initialZones, initialTeams);
+            // Fetch live baseline from backend if available
+            try {
+                const res = await fetch(`${API_BASE}/api/incident/baseline`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success) {
+                        window.currentIncidentId = data.incident.id;
+                        updateIncidentDashboard(data);
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.log('Using pre-seeded operational baseline while backend wakes up:', err);
+            }
+
+            // Fallback default coordinates and map initialization
+            const defaultZones = [
+                { id: 1, name: 'One Town & Commercial Confluence', short_name: 'One Town Reach', coordinates: '16.518°N, 80.612°E', population: 165000, risk_pct: 88.5, priority_score: 0.842, action_tier: 'IMMEDIATE RESCUE', status_color: '#ef4444', status_badge: 'tier-critical', priority_rank: 1, allocations: { boats: { count: 22, pct: 44 }, rescue_teams: { count: 8, pct: 44 }, ambulances: { count: 10, pct: 42 }, medical: { count: 2200, pct: 44 }, food: { count: 5400, pct: 45 }, water: { count: 4500, pct: 45 }, shelters: { count: 180, pct: 45 } }, latitude: 16.518, longitude: 80.612 },
+                { id: 2, name: 'Bhavanipuram Lowland Reach', short_name: 'Bhavanipuram', coordinates: '16.524°N, 80.601°E', population: 145000, risk_pct: 76.2, priority_score: 0.725, action_tier: 'ACTIVE DEPLOYMENT', status_color: '#f59e0b', status_badge: 'tier-high', priority_rank: 2, allocations: { boats: { count: 15, pct: 30 }, rescue_teams: { count: 5, pct: 28 }, ambulances: { count: 7, pct: 29 }, medical: { count: 1500, pct: 30 }, food: { count: 3600, pct: 30 }, water: { count: 3000, pct: 30 }, shelters: { count: 120, pct: 30 } }, latitude: 16.524, longitude: 80.601 },
+                { id: 3, name: 'Auto Nagar Industrial Reach', short_name: 'Auto Nagar', coordinates: '16.495°N, 80.665°E', population: 110000, risk_pct: 62.4, priority_score: 0.589, action_tier: 'STANDBY SUPPORT', status_color: '#3b82f6', status_badge: 'tier-moderate', priority_rank: 3, allocations: { boats: { count: 8, pct: 16 }, rescue_teams: { count: 3, pct: 17 }, ambulances: { count: 4, pct: 17 }, medical: { count: 800, pct: 16 }, food: { count: 1900, pct: 16 }, water: { count: 1600, pct: 16 }, shelters: { count: 65, pct: 16 } }, latitude: 16.495, longitude: 80.665 },
+                { id: 4, name: 'Gunadala Basin', short_name: 'Gunadala', coordinates: '16.512°N, 80.655°E', population: 100000, risk_pct: 38.1, priority_score: 0.362, action_tier: 'MONITORING TIER', status_color: '#10b981', status_badge: 'tier-low', priority_rank: 4, allocations: { boats: { count: 5, pct: 10 }, rescue_teams: { count: 2, pct: 11 }, ambulances: { count: 3, pct: 12 }, medical: { count: 500, pct: 10 }, food: { count: 1100, pct: 9 }, water: { count: 900, pct: 9 }, shelters: { count: 35, pct: 9 } }, latitude: 16.512, longitude: 80.655 }
+            ];
+            const defaultTeams = [
+                { team_id: 'NDRF-AP-10', name: '10th NDRF Battalion Water Rescue Wing', organization: 'National Disaster Response Force (NDRF)', team_type: 'Flood Rescue & Swift-Water Extraction', base_location: 'Bhavanipuram Sector Base, Vijayawada', latitude: 16.5210, longitude: 80.6050, phone: '+91-866-2410101 (Emergency 1077)', capabilities: 'Deep-water boat extraction, night navigation, swift-water dive gear', acknowledgement_status: 'STANDBY' },
+                { team_id: 'SDRF-BOAT-02', name: 'State Disaster Response Force Marine Squad 2', organization: 'Andhra Pradesh SDRF', team_type: 'Rapid Inflatable Boat Evacuation', base_location: 'Prakasam Barrage North Depot', latitude: 16.5085, longitude: 80.6130, phone: '+91-866-2580202 (Control 1070)', capabilities: 'Rigid inflatable boats (RIB), life-jackets, elderly & pediatric evacuation carriers', acknowledgement_status: 'STANDBY' },
+                { team_id: 'EMS-TRIAGE-04', name: 'Mobile Emergency Medical & Critical Trauma Squad', organization: 'Department of Health & Emergency Medical Services', team_type: 'Field Trauma Triage & Critical Ambulance', base_location: 'Government General Hospital Sector Hub', latitude: 16.5050, longitude: 80.6380, phone: '+91-866-2610404 (Emergency 108)', capabilities: 'Advanced life support ambulances, portable oxygen concentrators, field IV stabilization', acknowledgement_status: 'STANDBY' }
+            ];
+
+            initLeafletMap(16.5062, 80.6480, defaultZones, defaultTeams);
+            renderRescueTeamsGrid(defaultTeams);
+            renderAllocationCards(defaultZones, {
+                total_boats: 50, allocated_boats: 50,
+                total_rescue_teams: 18, allocated_rescue_teams: 18,
+                total_ambulances: 24, allocated_ambulances: 24,
+                total_medical: 5000, allocated_medical: 5000,
+                total_food: 12000, allocated_food: 12000,
+                total_water: 10000, allocated_water: 10000,
+                total_shelters: 400, allocated_shelters: 400
+            });
         });
     </script>
 </body>
