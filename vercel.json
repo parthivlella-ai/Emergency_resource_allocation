@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://emergency-resource-backend.onrender.com/api/$1"
+      "destination": "https://emergency-resource-allocation.onrender.com/api/$1"
     }
   ]
 }

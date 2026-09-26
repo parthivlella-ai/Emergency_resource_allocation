@@ -1455,7 +1455,8 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
     <!-- Client-side Interactive Logic & Map Scripts -->
     <script>
         // Support Vercel frontend calling Render backend or same-origin
-        const API_BASE = window.RENDER_BACKEND_URL || localStorage.getItem('RENDER_API_URL') || '';
+        const DEFAULT_RENDER_URL = 'https://emergency-resource-allocation.onrender.com';
+        const API_BASE = window.RENDER_BACKEND_URL || localStorage.getItem('RENDER_API_URL') || (window.location.hostname.includes('vercel.app') ? DEFAULT_RENDER_URL : '');
         window.currentIncidentId = 1;
         window.leafletMap = null;
         window.mapMarkers = [];
@@ -1469,10 +1470,10 @@ Action: IMMEDIATE WATER RESCUE & EVACUATION. Please acknowledge deployment statu
                     const host = new URL(custom).hostname;
                     lbl.innerText = host.replace('.onrender.com', '').substring(0, 16);
                 } catch(e) {
-                    lbl.innerText = 'Remote API';
+                    lbl.innerText = 'Render Linked';
                 }
             } else if (window.location.hostname.includes('vercel.app')) {
-                lbl.innerText = 'Set Render URL';
+                lbl.innerText = 'Render Linked';
             } else {
                 lbl.innerText = 'Connected';
             }
